@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -9,12 +9,11 @@
 UENUM(BlueprintType)
 enum class EBlockType : uint8
 {
-	EBT_Full	UMETA(DisplayName = "Full Block"),	  // ¿ø·¡ Å©±â 
-	EBT_Quarter UMETA(DisplayName = "Quarter Block"), // 4µîºĞµÈ
-	//EBT_Eighth	UMETA(DisplayName = "Eighth Block"),  // 8µîºĞµÈ (ÃßÈÄ È®Àå),
-	//EBT_Packged UMETA(DisplayName = "Packaged Block"), // ºñ´Ò¿¡ Æ÷ÀåµÈ (ÃßÈÄ È®Àå),
+	EBT_Full	UMETA(DisplayName = "Full Block"),	  // ì›ë˜ í¬ê¸° 
+	EBT_Quarter UMETA(DisplayName = "Quarter Block"), // 4ë“±ë¶„ëœ
+	EBT_Eighth	UMETA(DisplayName = "Eighth Block"),  // 8ë“±ë¶„ëœ (ì¶”í›„ í™•ì¥),
 
-	EBT_Max // ¼¾Æ¼³Î °ª
+	EBT_Max UMETA(Hidden)// ì„¼í‹°ë„ ê°’
 };
 
 UCLASS()
@@ -36,11 +35,20 @@ public:
 	class UStaticMeshComponent* BlockMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block")
-	EBlockType BlockType; // ºí·Ï Å¸ÀÔ º¯¼ö Ãß°¡
+	EBlockType BlockType; // ë¸”ë¡ íƒ€ì… ë³€ìˆ˜ ì¶”ê°€
+
+	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	UStaticMesh* FullBlockMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	UStaticMesh* QuarterBlockMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	UStaticMesh* EightBlockMesh;
 
 public:
-	// ºí·Ï Å¸ÀÔ ¼³Á¤ ÇÔ¼ö
+	// ë¸”ë¡ íƒ€ì… ì„¤ì • í•¨ìˆ˜
 	void SetBlockType(EBlockType NewType);
-	// ¸Ş½Ã¸¦ ºí·Ï Å¸ÀÔ¿¡ ¸Â°Ô ¾÷µ¥ÀÌÆ®ÇÏ´Â ÇÔ¼ö
-	void UpdateMeshForBlockType();
+	//// ë©”ì‹œë¥¼ ë¸”ë¡ íƒ€ì…ì— ë§ê²Œ ì—…ë°ì´íŠ¸í•˜ëŠ” í•¨ìˆ˜
+	//void UpdateMeshForBlockType();
 };
