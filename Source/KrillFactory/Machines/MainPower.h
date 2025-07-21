@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -22,5 +22,5 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bPowerOn;
 
-	//FPowerOn PowerOn; // ´Ù¸¥ ±â°èµéÀÌ ¹ÙÀÎµù ÇØ¾ßÇÔ
+	//FPowerOn PowerOn; // ë‹¤ë¥¸ ê¸°ê³„ë“¤ì´ ë°”ì¸ë”© í•´ì•¼í•¨
 };

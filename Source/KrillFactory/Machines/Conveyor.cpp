@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Machines/Conveyor.h"
@@ -16,12 +16,12 @@ AConveyor::AConveyor()
 	bPowerOn = false;
 
 	MoveSpeed = 100.0f;
-	BlockSpawnInterval = 2.0f;  // 2ÃÊ °£°İÀ¸·Î ºí·Ï ÅõÀÔ
+	BlockSpawnInterval = 2.0f;  // 2ì´ˆ ê°„ê²©ìœ¼ë¡œ ë¸”ë¡ íˆ¬ì…
 	//MaxBlockPoolSize = 50;
 	NumBlocksToSpawn = 50;
 	BlocksSpawnedCount = 0;
 
-	// Å¸ÀÔº° ±âº» Ç® Å©±â ¼³Á¤(¿¡µğÅÍ¿¡¼­ ¿À¹ö¶óÀÌµå °¡´É)
+	// íƒ€ì…ë³„ ê¸°ë³¸ í’€ í¬ê¸° ì„¤ì •(ì—ë””í„°ì—ì„œ ì˜¤ë²„ë¼ì´ë“œ ê°€ëŠ¥)
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Full, 50);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Quarter, 200);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 400);
@@ -35,14 +35,14 @@ void AConveyor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Conveyor : Spline needs at least 2 points for movement!"));
 	}
-	// ½ºÇÃ¶óÀÎ ½ÃÀÛ ÁöÁ¡ÀÇ À§Ä¡¿Í È¸Àü Ä³½Ã
+	// ìŠ¤í”Œë¼ì¸ ì‹œì‘ ì§€ì ì˜ ìœ„ì¹˜ì™€ íšŒì „ ìºì‹œ
 	SplineStartLocation = Spline->GetLocationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 	SplineStartRotation = Spline->GetRotationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 
-	// ºí·Ï Ç® ÃÊ±âÈ­
+	// ë¸”ë¡ í’€ ì´ˆê¸°í™”
 	InitializeBlockPool();
 
-	// Ã¹ ºí·Ï ÅõÀÔ Å¸ÀÌ¸Ó ½ÃÀÛ(Ã³À½¿£ ¹Ù·Î ÅõÀÔ)
+	// ì²« ë¸”ë¡ íˆ¬ì… íƒ€ì´ë¨¸ ì‹œì‘(ì²˜ìŒì—” ë°”ë¡œ íˆ¬ì…)
 	if (NumBlocksToSpawn > 0)
 	{
 		GetWorldTimerManager().SetTimer(BlockSpawnTimerHandle, this, &AConveyor::TrySpawnNextBlock, BlockSpawnInterval, true, 0.0f);
@@ -53,7 +53,7 @@ void AConveyor::EndPlay(const EEndPlayReason::Type Reason)
 {
 	Super::EndPlay(Reason);
 
-	// TMap¿¡ ÀúÀåµÈ ¸ğµç TQueue Æ÷ÀÎÅÍµéÀ» ¼øÈ¸ÇÏ¸ç ¸Ş¸ğ¸® ÇØÁ¦
+	// TMapì— ì €ì¥ëœ ëª¨ë“  TQueue í¬ì¸í„°ë“¤ì„ ìˆœíšŒí•˜ë©° ë©”ëª¨ë¦¬ í•´ì œ
 	for (auto& Elem : AvailableBlockPools)
 	{
 		delete Elem.Value;
@@ -68,7 +68,7 @@ void AConveyor::Tick(float DeltaTime)
 
 	const float SplineLength = Spline->GetSplineLength();
 
-	// ÇöÀç È°¼ºÈ­µÈ ºí·ÏµéÀÇ À§Ä¡ ¾÷µ¥ÀÌÆ®
+	// í˜„ì¬ í™œì„±í™”ëœ ë¸”ë¡ë“¤ì˜ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 	for (int32 i = ActiveBlocks.Num() - 1; i >= 0; i--)
 	{
 		FActiveBlockInfo& CurrentInfo = ActiveBlocks[i];
@@ -77,15 +77,15 @@ void AConveyor::Tick(float DeltaTime)
 		{
 			CurrentInfo.DistanceAlongSpline += MoveSpeed * DeltaTime;
 
-			// ½ºÇÃ¶óÀÎ ³¡¿¡ µµ´ŞÇß´ÂÁö È®ÀÎ
+			// ìŠ¤í”Œë¼ì¸ ëì— ë„ë‹¬í–ˆëŠ”ì§€ í™•ì¸
 			if (CurrentInfo.DistanceAlongSpline >= SplineLength)
 			{
-				// Ç®·Î ¹İÈ¯
+				// í’€ë¡œ ë°˜í™˜
 				ReturnBlockToPool(CurrentInfo.Block);
 			}
 			else
 			{
-				// ºí·Ï À§Ä¡ ¾÷µ¥ÀÌÆ®
+				// ë¸”ë¡ ìœ„ì¹˜ ì—…ë°ì´íŠ¸
 				FVector NewLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
 				FRotator NewRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
 				CurrentInfo.Block->SetActorLocation(NewLocation);
@@ -117,13 +117,13 @@ void AConveyor::InitializeBlockPool()
 			AKrillBlock* NewBlock = GetWorld()->SpawnActor<AKrillBlock>(GetActorLocation(), FRotator::ZeroRotator);
 			if (NewBlock)
 			{
-				// »ı¼º ½Ã ¹Ù·Î ºñÈ°¼ºÈ­ ¹× Å¸ÀÔ ¼³Á¤
+				// ìƒì„± ì‹œ ë°”ë¡œ ë¹„í™œì„±í™” ë° íƒ€ì… ì„¤ì •
 				NewBlock->SetActorHiddenInGame(true);
 				NewBlock->SetActorEnableCollision(false);
 				NewBlock->SetActorTickEnabled(false);
-				NewBlock->SetBlockType(CurrentType); // Ç®¿¡ µé¾î°¥ ¶§ ÇØ´ç Å¸ÀÔÀ¸·Î ¼³Á¤
+				NewBlock->SetBlockType(CurrentType); // í’€ì— ë“¤ì–´ê°ˆ ë•Œ í•´ë‹¹ íƒ€ì…ìœ¼ë¡œ ì„¤ì •
 
-				// ÇØ´ç Å¸ÀÔÀÇ Å¥¿¡ ºí·Ï Ãß°¡
+				// í•´ë‹¹ íƒ€ì…ì˜ íì— ë¸”ë¡ ì¶”ê°€
 				AvailableBlockPools[CurrentType]->Enqueue(NewBlock);
 			}
 		}
@@ -134,19 +134,19 @@ void AConveyor::InitializeBlockPool()
 
 void AConveyor::TrySpawnNextBlock()
 {
-	// ÇöÀç < ÃÑ °¹¼ö
+	// í˜„ì¬ < ì´ ê°¯ìˆ˜
 	if (BlocksSpawnedCount < NumBlocksToSpawn)
 	{
 		AKrillBlock* NewActiveBlock = GetBlockFromPool(EBlockType::EBT_Full);
 		if (NewActiveBlock)
 		{
-			// ½ºÇÃ¶óÀÎ ½ÃÀÛ ÁöÁ¡¿¡ ºí·Ï ¹èÄ¡
+			// ìŠ¤í”Œë¼ì¸ ì‹œì‘ ì§€ì ì— ë¸”ë¡ ë°°ì¹˜
 			NewActiveBlock->SetActorLocation(SplineStartLocation);
 			NewActiveBlock->SetActorRotation(SplineStartRotation);
 
 			FActiveBlockInfo NewInfo;
 			NewInfo.Block = NewActiveBlock;
-			NewInfo.DistanceAlongSpline = 0.0f; // ½ºÇÃ¶óÀÎ ½ÃÀÛ ÁöÁ¡
+			NewInfo.DistanceAlongSpline = 0.0f; // ìŠ¤í”Œë¼ì¸ ì‹œì‘ ì§€ì 
 			ActiveBlocks.Add(NewInfo);
 			
 			BlocksSpawnedCount++;
@@ -155,7 +155,7 @@ void AConveyor::TrySpawnNextBlock()
 	}
 	else
 	{
-		// ¸ğµç ºí·ÏÀ» ÅõÀÔÇß´Ù¸é Å¸ÀÌ¸Ó ÁßÁö
+		// ëª¨ë“  ë¸”ë¡ì„ íˆ¬ì…í–ˆë‹¤ë©´ íƒ€ì´ë¨¸ ì¤‘ì§€
 		GetWorldTimerManager().ClearTimer(BlockSpawnTimerHandle);
 		UE_LOG(LogTemp, Log, TEXT("Conveyor : All %d blocks Spawned."), NumBlocksToSpawn);
 	}
@@ -179,7 +179,7 @@ AKrillBlock* AConveyor::GetBlockFromPool(EBlockType Type)
 			Block->SetActorHiddenInGame(false);
 			Block->SetActorEnableCollision(true);
 			Block->SetActorTickEnabled(true);
-			Block->SetBlockType(Type); // ´Ù½Ã ¼³Á¤
+			Block->SetBlockType(Type); // ë‹¤ì‹œ ì„¤ì •
 			return Block;
 		}
 	}
@@ -190,7 +190,7 @@ void AConveyor::ReturnBlockToPool(AKrillBlock* BlockToReturn)
 {
 	if (IsValid(BlockToReturn))
 	{
-		// ActiveBlocks ¹è¿­¿¡¼­ ºí·Ï Á¦°Å
+		// ActiveBlocks ë°°ì—´ì—ì„œ ë¸”ë¡ ì œê±°
 		int32 FoundIndex = ActiveBlocks.IndexOfByPredicate([&](const FActiveBlockInfo& Info)
 			{
 				return Info.Block == BlockToReturn;
@@ -201,9 +201,9 @@ void AConveyor::ReturnBlockToPool(AKrillBlock* BlockToReturn)
 			ActiveBlocks.RemoveAt(FoundIndex);
 		}
 
-		BlockToReturn->SetActorHiddenInGame(true); // ¾Èº¸ÀÌ°Ô
-		BlockToReturn->SetActorEnableCollision(false); // Äİ¸®Àü ÇØÁ¦
-		BlockToReturn->SetActorTickEnabled(false); // ÇöÀç´Â Æ½ÀÌ ¾øÁö¸¸ ³ªÁß¿¡ »ç¿ëÇÒ ¼ö ÀÖÀ¸´Ï ÁÖ¼®
+		BlockToReturn->SetActorHiddenInGame(true); // ì•ˆë³´ì´ê²Œ
+		BlockToReturn->SetActorEnableCollision(false); // ì½œë¦¬ì „ í•´ì œ
+		BlockToReturn->SetActorTickEnabled(false); // í˜„ì¬ëŠ” í‹±ì´ ì—†ì§€ë§Œ ë‚˜ì¤‘ì— ì‚¬ìš©í•  ìˆ˜ ìˆìœ¼ë‹ˆ ì£¼ì„
 		
 		TQueue<AKrillBlock*>* PoolPtr = AvailableBlockPools.FindRef(BlockToReturn->BlockType);
 		if (PoolPtr)
