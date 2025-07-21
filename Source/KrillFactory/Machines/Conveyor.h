@@ -56,7 +56,10 @@ private:
 	{
 		UPROPERTY()
 		AKrillBlock* Block;
+		UPROPERTY()
 		float DistanceAlongSpline;
+		UPROPERTY()
+		FVector RelativeOffsetFromSpline;
 	};
 	TArray<FActiveBlockInfo> ActiveBlocks;
 

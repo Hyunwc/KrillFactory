@@ -77,20 +77,37 @@ void AConveyor::Tick(float DeltaTime)
 		{
 			CurrentInfo.DistanceAlongSpline += MoveSpeed * DeltaTime;
 
-			// 스플라인 끝에 도달했는지 확인
-			if (CurrentInfo.DistanceAlongSpline >= SplineLength)
-			{
-				// 풀로 반환
-				ReturnBlockToPool(CurrentInfo.Block);
-			}
-			else
-			{
-				// 블록 위치 업데이트
-				FVector NewLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
-				FRotator NewRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
-				CurrentInfo.Block->SetActorLocation(NewLocation);
-				CurrentInfo.Block->SetActorRotation(NewRotation);
-			}
+			// 스플라인 상의 새로운 중심 위치와 회전 가져오기
+			FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			FVector SplineUpVector = Spline->GetUpVectorAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			FVector SplineTangent = Spline->GetTangentAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			SplineTangent.Normalize();
+			
+			FVector SplineRightVector = FVector::CrossProduct(SplineTangent, SplineUpVector);
+			SplineRightVector.Normalize();
+
+			FVector FinalBlockLocation = SplineLocation
+				+ SplineRightVector * CurrentInfo.RelativeOffsetFromSpline.Y
+				+ SplineUpVector * CurrentInfo.RelativeOffsetFromSpline.Z;
+
+			CurrentInfo.Block->SetActorLocation(FinalBlockLocation);
+			CurrentInfo.Block->SetActorRotation(SplineRotation);
+			//
+			//// 스플라인 끝에 도달했는지 확인
+			//if (CurrentInfo.DistanceAlongSpline >= SplineLength)
+			//{
+			//	// 풀로 반환
+			//	ReturnBlockToPool(CurrentInfo.Block);
+			//}
+			//else
+			//{
+			//	// 블록 위치 업데이트
+			//	FVector NewLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			//	FRotator NewRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+			//	CurrentInfo.Block->SetActorLocation(NewLocation);
+			//	CurrentInfo.Block->SetActorRotation(NewRotation);
+			//}
 		}
 		else
 		{
@@ -224,13 +241,35 @@ void AConveyor::AddBlockToConveyorAtWorldLocation(AKrillBlock* Block, const FVec
 		Block->SetActorLocation(WorldLocation);
 		Block->SetActorRotation(WorldRotation);
 
+		// WorldLocation에 가장 가까운 스플라인 상의 입력 키와 거리 계산
 		float ClosestInputKey = Spline->FindInputKeyClosestToWorldLocation(WorldLocation);
-
 		float Distance = Spline->GetDistanceAlongSplineAtSplineInputKey(ClosestInputKey);
+
+		// 스플라인 상의 해당 지점 (중심) 위치
+		FVector SplineLocationAtClosestPoint = Spline->GetLocationAtSplineInputKey(ClosestInputKey, ESplineCoordinateSpace::World);
+		// 스플라인 상의 접선 방향 (블록의 전방 방향)
+		FVector SplineTangentAtClosestPoint = Spline->GetTangentAtSplineInputKey(ClosestInputKey, ESplineCoordinateSpace::World);
+		SplineTangentAtClosestPoint.Normalize();
+
+		// 스플라인의 Up 벡터 (블록의 상방 방향)
+		FVector SplineUpVector = Spline->GetUpVectorAtSplineInputKey(ClosestInputKey, ESplineCoordinateSpace::World);
+		SplineUpVector.Normalize();
+
+		// 스팔라인의 Right 벡터 (블록의 옆 방향) 
+		FVector SplineRightVector = FVector::CrossProduct(SplineTangentAtClosestPoint, SplineUpVector);
+		SplineRightVector.Normalize();
+
+		// 블록의 월드 위치에서 스플라인 중심 위치를 뺀 벡터
+		FVector DeltaVector = WorldLocation - SplineLocationAtClosestPoint;
+
+		FVector RelativeOffset = FVector::ZeroVector;
+		RelativeOffset.Y = FVector::DotProduct(DeltaVector, SplineRightVector);
+		RelativeOffset.Z = FVector::DotProduct(DeltaVector, SplineUpVector);
 
 		FActiveBlockInfo NewInfo;
 		NewInfo.Block = Block;
 		NewInfo.DistanceAlongSpline = Distance;
+		NewInfo.RelativeOffsetFromSpline = RelativeOffset;
 		ActiveBlocks.Add(NewInfo);
 	}
 }

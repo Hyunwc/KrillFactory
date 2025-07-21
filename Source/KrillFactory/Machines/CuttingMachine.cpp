@@ -55,44 +55,55 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 {
 	AKrillBlock* OverlappingBlock = Cast<AKrillBlock>(OtherActor);
 
-	// 블록이고, 아직 컷팅 쿨다운 중이 아니며, Full Block일 경우
-	if (OverlappingBlock && !bIncuttingCooldown && OverlappingBlock->BlockType == EBlockType::EBT_Full)
+	if (!OverlappingBlock)
 	{
-		// 컷팅 로직 시작
-		if (FoundConveyor)
+		return;
+	}
+
+	// 오버랩된 블록타입 확인
+	if (OverlappingBlock->BlockType == EBlockType::EBT_Full)
+	{
+		// 1. 기존 풀 블록의 위치와 회전 저장
+		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
+		FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
+
+		// 2. 기존 풀 블록을 컨베이어 풀로 반납
+		if (!FoundConveyor)
 		{
-			// 1. 기존 Full block을 풀로 반환
-			FoundConveyor->ReturnBlockToPool(OverlappingBlock);
+			UE_LOG(LogTemp, Error, TEXT("CuttingMachine : Conveyor Not Found!"));
+			return;
+		}
+		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
-			// 2. 4등분된 블록들을 풀에서 가져와 그 위치에 다시 투입
-			const FVector CutLocation = OverlappingBlock->GetActorLocation();
-			const FRotator CutRotation = OverlappingBlock->GetActorRotation();
+		//const float QuarterCubeHalfYExtent = 100.0f * 0.2f / 2.0f;
 
-			// 4개 블록이 잘리는 위치에 나란히 놓이도록 오프셋 계산
-			// 이 오프셋은 블록의 1/4 크기와 맞물려야 한다.
+		//float HalfFullY = 0.8f / 2.0f;
+		//float HalfQuarterY = 0.2f / 2.0f;
 
-			float QuarterBlockHalfSize = 25.0f;
-			float Gap = 5.0f; // 블록의 작은 간격
+		//TArray<FVector> Offsets;
+		//// 첫 번짼
+		//Offsets.Add(FVector(0.0f, -HalfFullY + HalfQuarterY, 0.0f));
+		//Offsets.Add(FVector(0.0f, -HalfFullY + HalfQuarterY * 3, 0.0f));
+		//Offsets.Add(FVector(0.0f, HalfFullY - HalfQuarterY * 3, 0.0f));
+		//Offsets.Add(FVector(0.0f, HalfFullY - HalfQuarterY, 0.0f));
 
-			// 블록의 로컬 Y축 방향으로 오프셋
-			FVector RightDirection = CutRotation.RotateVector(FVector::RightVector);
+		TArray<float> Y_Offsets_cm;
+		Y_Offsets_cm.Add(-30.f);
+		Y_Offsets_cm.Add(-10.f);
+		Y_Offsets_cm.Add(10.f);
+		Y_Offsets_cm.Add(30.f);
 
-			for (int32 i = 0; i < 4; i++)
+		for (int32 i = 0; i < 4; i++)
+		{
+			AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
+			if (NewQuaterBlock)
 			{
-				AKrillBlock* QuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
-				if (QuaterBlock)
-				{
-					// 4개의 쿼터 블록을 Y축으로 나란히 배치
-					FVector SpawnOffset = RightDirection * ((i - 1.5f) * (QuarterBlockHalfSize * 2.0f + Gap));
-					FVector NewSpawnLocation = CutLocation + SpawnOffset;
+				FVector LocalOffset = FVector(0.0f, Y_Offsets_cm[i], 0.0f);
+				FVector WorldOffset = OriginalRotation.RotateVector(LocalOffset);
+				FVector NewBlockLocation = OriginalLocation + WorldOffset;
 
-					FoundConveyor->AddBlockToConveyorAtWorldLocation(QuaterBlock, NewSpawnLocation, CutRotation);
-				}
+				FoundConveyor->AddBlockToConveyorAtWorldLocation(NewQuaterBlock, NewBlockLocation, OriginalRotation);
 			}
-
-			// 컷팅 쿨다운 시작(동일 블록이 다시 바로 잘리는 것 방지)
-			bIncuttingCooldown = true;
-			GetWorldTimerManager().SetTimer(CuttingCooldownTimerHandle, this, &ACuttingMachine::ClearCuttingCooldown, 0.5f, false);
 		}
 	}
 }
