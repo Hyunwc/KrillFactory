@@ -24,12 +24,14 @@ AKrillBlock::AKrillBlock()
 	}
 
 	BlockType = EBlockType::EBT_Full; // 처음은 Full
-	SetBlockType(EBlockType::EBT_Full);
+	//SetBlockType(EBlockType::EBT_Full);
 }
 
 void AKrillBlock::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SetBlockType(BlockType);
 }
 
 void AKrillBlock::Tick(float DeltaTime)
@@ -48,19 +50,19 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 	{
 	case EBlockType::EBT_Full:
 		MeshToUse = FullBlockMesh;
-		ScaleToUse = FVector(1.0f, 1.0f, 1.0f); // 기본(필요에 따라 변경)
+		ScaleToUse = FVector(0.4f, 0.8f, 0.2f); // 기본(필요에 따라 변경)
 		break;
 	case EBlockType::EBT_Quarter:
 		MeshToUse = QuarterBlockMesh;
-		ScaleToUse = FVector(0.5f, 0.5f, 0.5f); // 1/4
+		ScaleToUse = FVector(0.4f, 0.2f, 0.2f); // 1/4
 		break;
 	case EBlockType::EBT_Eighth:
 		MeshToUse = EightBlockMesh;
-		ScaleToUse = FVector(0.25f, 0.25f, 0.25f); // 1/4
+		ScaleToUse = FVector(0.2f, 0.2f, 0.2f); // 1/4
 		break;
 	default:
 		MeshToUse = FullBlockMesh;
-		ScaleToUse = FVector(1.0f, 1.0f, 1.0f); 
+		ScaleToUse = FVector(0.4f, 0.8f, 0.2f);
 		break;
 	}
 
