@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -34,29 +34,29 @@ public:
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* BladeMesh; // Ä®³¯
+	UStaticMeshComponent* BladeMesh; // ì¹¼ë‚ 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UBoxComponent* CuttingZone; // ÄÆÆÃ ÀÌº¥Æ® ¹ß»ı ¿µ¿ª
+	UBoxComponent* CuttingZone; // ì»·íŒ… ì´ë²¤íŠ¸ ë°œìƒ ì˜ì—­
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CuttingMachine")
-	int32 NumberOfBlades; // Ä®³¯ °³¼ö
+	int32 NumberOfBlades; // ì¹¼ë‚  ê°œìˆ˜
 private:
-	// ½ÇÁ¦ Ä®³¯ ¸Ş½Ã ÀÎ½ºÅÏ½º¸¦ ÀúÀåÇÒ ¹è¿­
+	// ì‹¤ì œ ì¹¼ë‚  ë©”ì‹œ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì €ì¥í•  ë°°ì—´
 	UPROPERTY()
 	TArray<UStaticMeshComponent*> BladeInstance;
 
-	// Ç® ±â´ÉÀ» »ç¿ëÇÏ±â À§ÇØ ÄÁº£ÀÌ¾î ÀÎ½ºÅÏ½º¸¦ ¿ùµå¿¡¼­
+	// í’€ ê¸°ëŠ¥ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ ì»¨ë² ì´ì–´ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ì›”ë“œì—ì„œ
 	UPROPERTY()
 	AConveyor* FoundConveyor;
 
-	// ÇöÀç ÄÆÆÃ Á¸¿¡ ÀÖ´Â ºí·ÏµéÀ» ÃßÀû
+	// í˜„ì¬ ì»·íŒ… ì¡´ì— ìˆëŠ” ë¸”ë¡ë“¤ì„ ì¶”ì 
 	UPROPERTY()
 	TSet<AKrillBlock*> BlocksInCuttingZone;
 
-	// Àß¸° ºí·ÏÀÌ ´Ù½Ã µé¾î¿À´Â °Å½Â¤© ¸·±â À§ÇÑ Äğ´Ù¿î(¿É¼Ç)
+	// ì˜ë¦° ë¸”ë¡ì´ ë‹¤ì‹œ ë“¤ì–´ì˜¤ëŠ” ê±°ìŠ¹ã„¹ ë§‰ê¸° ìœ„í•œ ì¿¨ë‹¤ìš´(ì˜µì…˜)
 	FTimerHandle CuttingCooldownTimerHandle;
 	void ClearCuttingCooldown();
 	bool bIncuttingCooldown;
-	void SpawnBlades(); // Ä®³¯ ¸Ş½Ã ¿©·¯ °³ »ı¼º ÇÔ¼ö (ºí·çÇÁ¸°Æ®¿¡¼­ ¼³Á¤??)
+	void SpawnBlades(); // ì¹¼ë‚  ë©”ì‹œ ì—¬ëŸ¬ ê°œ ìƒì„± í•¨ìˆ˜ (ë¸”ë£¨í”„ë¦°íŠ¸ì—ì„œ ì„¤ì •??)
 };

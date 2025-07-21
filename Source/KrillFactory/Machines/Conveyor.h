@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -27,31 +27,31 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	// ºí·Ïµé ÀÌµ¿ °æ·Î
+	// ë¸”ë¡ë“¤ ì´ë™ ê²½ë¡œ
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USplineComponent* Spline;
 
-	// ±â°èÀÇ Àü¿ø
+	// ê¸°ê³„ì˜ ì „ì›
 	UPROPERTY(VisibleAnywhere, Category = "Power")
 	bool bPowerOn;
 
-	// ÄÁº£ÀÌ¾î ¼Óµµ
+	// ì»¨ë² ì´ì–´ ì†ë„
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conveyor")
 	float MoveSpeed;
 
-	// ´ÙÀ½ ºí·ÏÀ» ÅõÀÔÇÒ ½Ã°£ °£°İ
+	// ë‹¤ìŒ ë¸”ë¡ì„ íˆ¬ì…í•  ì‹œê°„ ê°„ê²©
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conveyor")
 	float BlockSpawnInterval;
 
-	// Å¸ÀÔº° ÃÖ´ë Ç® Å©±â
+	// íƒ€ì…ë³„ ìµœëŒ€ í’€ í¬ê¸°
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conveyor Pool")
 	TMap<EBlockType, int32> MaxBlockPoolSizes;
 
 private:
-	// Å¸ÀÔº°·Î »ç¿ë °¡´ÉÇÑ ºí·Ï Å¥¸¦ ÀúÀåÇÏ´Â TMap
+	// íƒ€ì…ë³„ë¡œ ì‚¬ìš© ê°€ëŠ¥í•œ ë¸”ë¡ íë¥¼ ì €ì¥í•˜ëŠ” TMap
 	TMap<EBlockType, TQueue<AKrillBlock*>*> AvailableBlockPools;
 
-	// ÇöÀç È°¼ºÈ­µÇ¾î ÄÁº£ÀÌ¾î À§¿¡ ÀÖ´Â ºí·Ïµé(ºí·Ï°ú ±× ½ºÇÃ¶óÀÎ °Å¸®¸¦ ¹­À½)
+	// í˜„ì¬ í™œì„±í™”ë˜ì–´ ì»¨ë² ì´ì–´ ìœ„ì— ìˆëŠ” ë¸”ë¡ë“¤(ë¸”ë¡ê³¼ ê·¸ ìŠ¤í”Œë¼ì¸ ê±°ë¦¬ë¥¼ ë¬¶ìŒ)
 	struct FActiveBlockInfo
 	{
 		UPROPERTY()
@@ -60,28 +60,28 @@ private:
 	};
 	TArray<FActiveBlockInfo> ActiveBlocks;
 
-	// ----- Å¸ÀÌ¸Ó °ü·Ã º¯¼öµé -----
-	FTimerHandle BlockSpawnTimerHandle; // ºí·Ï ÅõÀÔ Å¸ÀÌ¸Ó ÇÚµé
-	int32 NumBlocksToSpawn; // ÅõÀÔÇÒ ºí·ÏÀÇ ÃÑ °³¼ö
-	int32 BlocksSpawnedCount; // ÇöÀç±îÁö ÅõÀÔµÈ ºí·Ï °³¼ö
+	// ----- íƒ€ì´ë¨¸ ê´€ë ¨ ë³€ìˆ˜ë“¤ -----
+	FTimerHandle BlockSpawnTimerHandle; // ë¸”ë¡ íˆ¬ì… íƒ€ì´ë¨¸ í•¸ë“¤
+	int32 NumBlocksToSpawn; // íˆ¬ì…í•  ë¸”ë¡ì˜ ì´ ê°œìˆ˜
+	int32 BlocksSpawnedCount; // í˜„ì¬ê¹Œì§€ íˆ¬ì…ëœ ë¸”ë¡ ê°œìˆ˜
 
-	// ½ºÇÃ¶óÀÎ ½ÃÀÛ ÁöÁ¡ÀÇ ¿ùµå À§Ä¡ ¹× È¸Àü
+	// ìŠ¤í”Œë¼ì¸ ì‹œì‘ ì§€ì ì˜ ì›”ë“œ ìœ„ì¹˜ ë° íšŒì „
 	FVector SplineStartLocation;
 	FRotator SplineStartRotation;
 
-	// ----- Ç®¸µ ¹× ÅõÀÔ ÇÔ¼öµé -----
-	void InitializeBlockPool(); // Ç® ÃÊ±âÈ­
-	void TrySpawnNextBlock(); // Å¸ÀÌ¸Ó¿¡ ÀÇÇØ È£ÃâµÉ ÇÔ¼ö (´ÙÀ½ ºí·Ï ÅõÀÔ ½Ãµµ)
+	// ----- í’€ë§ ë° íˆ¬ì… í•¨ìˆ˜ë“¤ -----
+	void InitializeBlockPool(); // í’€ ì´ˆê¸°í™”
+	void TrySpawnNextBlock(); // íƒ€ì´ë¨¸ì— ì˜í•´ í˜¸ì¶œë  í•¨ìˆ˜ (ë‹¤ìŒ ë¸”ë¡ íˆ¬ì… ì‹œë„)
 
 public:
-	// ¿ÜºÎ¿¡¼­ È£ÃâÇÒ ÇÔ¼öµé
+	// ì™¸ë¶€ì—ì„œ í˜¸ì¶œí•  í•¨ìˆ˜ë“¤
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	AKrillBlock* GetBlockFromPool(EBlockType Type); // Ç®¿¡¼­ ºí·ÏÀ» °¡Á®¿À´Â ÇÔ¼ö
+	AKrillBlock* GetBlockFromPool(EBlockType Type); // í’€ì—ì„œ ë¸”ë¡ì„ ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜
 
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	void ReturnBlockToPool(AKrillBlock* BlockToReturn); // ºí·ÏÀ» Ç®·Î ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	void ReturnBlockToPool(AKrillBlock* BlockToReturn); // ë¸”ë¡ì„ í’€ë¡œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 
-	// Æ¯Á¤ À§Ä¡¿¡ ºí·ÏÀ» ½ºÇÃ¶óÀÎ¿¡ Ãß°¡ÇÏ´Â ÇÔ¼ö(Àı»è±â¿ë)
+	// íŠ¹ì • ìœ„ì¹˜ì— ë¸”ë¡ì„ ìŠ¤í”Œë¼ì¸ì— ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜(ì ˆì‚­ê¸°ìš©)
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
 	void AddBlockToConveyorAtWorldLocation(AKrillBlock* Block, const FVector& WorldLocation, const FRotator& WorldRotation);
 };

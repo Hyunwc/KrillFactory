@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Machines/CuttingMachine.h"
@@ -55,26 +55,26 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 {
 	AKrillBlock* OverlappingBlock = Cast<AKrillBlock>(OtherActor);
 
-	// ºí·ÏÀÌ°í, ¾ÆÁ÷ ÄÆÆÃ Äğ´Ù¿î ÁßÀÌ ¾Æ´Ï¸ç, Full BlockÀÏ °æ¿ì
+	// ë¸”ë¡ì´ê³ , ì•„ì§ ì»·íŒ… ì¿¨ë‹¤ìš´ ì¤‘ì´ ì•„ë‹ˆë©°, Full Blockì¼ ê²½ìš°
 	if (OverlappingBlock && !bIncuttingCooldown && OverlappingBlock->BlockType == EBlockType::EBT_Full)
 	{
-		// ÄÆÆÃ ·ÎÁ÷ ½ÃÀÛ
+		// ì»·íŒ… ë¡œì§ ì‹œì‘
 		if (FoundConveyor)
 		{
-			// 1. ±âÁ¸ Full blockÀ» Ç®·Î ¹İÈ¯
+			// 1. ê¸°ì¡´ Full blockì„ í’€ë¡œ ë°˜í™˜
 			FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
-			// 2. 4µîºĞµÈ ºí·ÏµéÀ» Ç®¿¡¼­ °¡Á®¿Í ±× À§Ä¡¿¡ ´Ù½Ã ÅõÀÔ
+			// 2. 4ë“±ë¶„ëœ ë¸”ë¡ë“¤ì„ í’€ì—ì„œ ê°€ì ¸ì™€ ê·¸ ìœ„ì¹˜ì— ë‹¤ì‹œ íˆ¬ì…
 			const FVector CutLocation = OverlappingBlock->GetActorLocation();
 			const FRotator CutRotation = OverlappingBlock->GetActorRotation();
 
-			// 4°³ ºí·ÏÀÌ Àß¸®´Â À§Ä¡¿¡ ³ª¶õÈ÷ ³õÀÌµµ·Ï ¿ÀÇÁ¼Â °è»ê
-			// ÀÌ ¿ÀÇÁ¼ÂÀº ºí·ÏÀÇ 1/4 Å©±â¿Í ¸Â¹°·Á¾ß ÇÑ´Ù.
+			// 4ê°œ ë¸”ë¡ì´ ì˜ë¦¬ëŠ” ìœ„ì¹˜ì— ë‚˜ë€íˆ ë†“ì´ë„ë¡ ì˜¤í”„ì…‹ ê³„ì‚°
+			// ì´ ì˜¤í”„ì…‹ì€ ë¸”ë¡ì˜ 1/4 í¬ê¸°ì™€ ë§ë¬¼ë ¤ì•¼ í•œë‹¤.
 
 			float QuarterBlockHalfSize = 25.0f;
-			float Gap = 5.0f; // ºí·ÏÀÇ ÀÛÀº °£°İ
+			float Gap = 5.0f; // ë¸”ë¡ì˜ ì‘ì€ ê°„ê²©
 
-			// ºí·ÏÀÇ ·ÎÄÃ YÃà ¹æÇâÀ¸·Î ¿ÀÇÁ¼Â
+			// ë¸”ë¡ì˜ ë¡œì»¬ Yì¶• ë°©í–¥ìœ¼ë¡œ ì˜¤í”„ì…‹
 			FVector RightDirection = CutRotation.RotateVector(FVector::RightVector);
 
 			for (int32 i = 0; i < 4; i++)
@@ -82,7 +82,7 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 				AKrillBlock* QuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
 				if (QuaterBlock)
 				{
-					// 4°³ÀÇ ÄõÅÍ ºí·ÏÀ» YÃàÀ¸·Î ³ª¶õÈ÷ ¹èÄ¡
+					// 4ê°œì˜ ì¿¼í„° ë¸”ë¡ì„ Yì¶•ìœ¼ë¡œ ë‚˜ë€íˆ ë°°ì¹˜
 					FVector SpawnOffset = RightDirection * ((i - 1.5f) * (QuarterBlockHalfSize * 2.0f + Gap));
 					FVector NewSpawnLocation = CutLocation + SpawnOffset;
 
@@ -90,7 +90,7 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 				}
 			}
 
-			// ÄÆÆÃ Äğ´Ù¿î ½ÃÀÛ(µ¿ÀÏ ºí·ÏÀÌ ´Ù½Ã ¹Ù·Î Àß¸®´Â °Í ¹æÁö)
+			// ì»·íŒ… ì¿¨ë‹¤ìš´ ì‹œì‘(ë™ì¼ ë¸”ë¡ì´ ë‹¤ì‹œ ë°”ë¡œ ì˜ë¦¬ëŠ” ê²ƒ ë°©ì§€)
 			bIncuttingCooldown = true;
 			GetWorldTimerManager().SetTimer(CuttingCooldownTimerHandle, this, &ACuttingMachine::ClearCuttingCooldown, 0.5f, false);
 		}
@@ -119,10 +119,10 @@ void ACuttingMachine::SpawnBlades()
 		return;
 	}
 
-	// Ã¹¹øÂ° Ä®³¯
+	// ì²«ë²ˆì§¸ ì¹¼ë‚ 
 	BladeInstance.Add(BladeMesh);
 
-	// ³ª¸ÓÁö Ä®³¯. Ä®°¹¼ö°¡ 1ÀÌ¸é »ı¼ºx
+	// ë‚˜ë¨¸ì§€ ì¹¼ë‚ . ì¹¼ê°¯ìˆ˜ê°€ 1ì´ë©´ ìƒì„±x
 	for (int32 i = 1; i < NumberOfBlades; i++)
 	{
 		UStaticMeshComponent* NewBlade = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("BladeMesh%d"), i)));

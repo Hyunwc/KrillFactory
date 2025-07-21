@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Products/KrillBlock.h"
 #include "Components/StaticMeshComponent.h"
@@ -13,7 +13,7 @@ AKrillBlock::AKrillBlock()
 	BlockMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BlockMesh->SetGenerateOverlapEvents(true);
 
-	// StaticMesh ÇÒ´ç ¹× Å©±â ¼³Á¤
+	// StaticMesh í• ë‹¹ ë° í¬ê¸° ì„¤ì •
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshRef(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
 	if (MeshRef.Object != nullptr)
 	{
@@ -23,7 +23,7 @@ AKrillBlock::AKrillBlock()
 		EightBlockMesh = MeshRef.Object;
 	}
 
-	BlockType = EBlockType::EBT_Full; // Ã³À½Àº Full
+	BlockType = EBlockType::EBT_Full; // ì²˜ìŒì€ Full
 	SetBlockType(EBlockType::EBT_Full);
 }
 
@@ -48,7 +48,7 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 	{
 	case EBlockType::EBT_Full:
 		MeshToUse = FullBlockMesh;
-		ScaleToUse = FVector(1.0f, 1.0f, 1.0f); // ±âº»(ÇÊ¿ä¿¡ µû¶ó º¯°æ)
+		ScaleToUse = FVector(1.0f, 1.0f, 1.0f); // ê¸°ë³¸(í•„ìš”ì— ë”°ë¼ ë³€ê²½)
 		break;
 	case EBlockType::EBT_Quarter:
 		MeshToUse = QuarterBlockMesh;
@@ -73,7 +73,7 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to load cube!!"));
 	}
-	//UpdateMeshForBlockType(); // Å¸ÀÔ º¯°æ ½Ã ¾÷µ¥ÀÌÆ®
+	//UpdateMeshForBlockType(); // íƒ€ì… ë³€ê²½ ì‹œ ì—…ë°ì´íŠ¸
 }
 
 //void AKrillBlock::UpdateMeshForBlockType()
