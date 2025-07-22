@@ -18,13 +18,13 @@ AKrillBlock::AKrillBlock()
 	if (MeshRef.Object != nullptr)
 	{
 		FullBlockMesh = MeshRef.Object;
-		//FullBlockMesh->SetWorldScale3D(FVector(0.75f, 1.0f, 0.25f));
 		QuarterBlockMesh = MeshRef.Object;
 		EightBlockMesh = MeshRef.Object;
 	}
 
+	// TODO : 머티리얼 추가
+
 	BlockType = EBlockType::EBT_Full; // 처음은 Full
-	//SetBlockType(EBlockType::EBT_Full);
 }
 
 void AKrillBlock::BeginPlay()
@@ -54,11 +54,11 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 		break;
 	case EBlockType::EBT_Quarter:
 		MeshToUse = QuarterBlockMesh;
-		ScaleToUse = FVector(0.4f, 0.2f, 0.2f); // 1/4
+		ScaleToUse = FVector(0.4f, 0.2f, 0.2f); 
 		break;
 	case EBlockType::EBT_Eighth:
 		MeshToUse = EightBlockMesh;
-		ScaleToUse = FVector(0.2f, 0.2f, 0.2f); // 1/4
+		ScaleToUse = FVector(0.2f, 0.2f, 0.2f);
 		break;
 	default:
 		MeshToUse = FullBlockMesh;
@@ -75,16 +75,8 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to load cube!!"));
 	}
-	//UpdateMeshForBlockType(); // 타입 변경 시 업데이트
 }
 
-//void AKrillBlock::UpdateMeshForBlockType()
-//{
-//	if (!BlockMesh)
-//	{
-//		return;
-//	}
-//}
 
 
 

@@ -56,11 +56,14 @@ private:
 	{
 		UPROPERTY()
 		AKrillBlock* Block;
+
 		UPROPERTY()
 		float DistanceAlongSpline;
+
 		UPROPERTY()
 		FVector RelativeOffsetFromSpline;
 	};
+
 	TArray<FActiveBlockInfo> ActiveBlocks;
 
 	// ----- 타이머 관련 변수들 -----

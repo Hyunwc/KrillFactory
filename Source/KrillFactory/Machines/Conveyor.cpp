@@ -17,7 +17,6 @@ AConveyor::AConveyor()
 
 	MoveSpeed = 100.0f;
 	BlockSpawnInterval = 2.0f;  // 2초 간격으로 블록 투입
-	//MaxBlockPoolSize = 50;
 	NumBlocksToSpawn = 50;
 	BlocksSpawnedCount = 0;
 
@@ -33,7 +32,7 @@ void AConveyor::BeginPlay()
 	
 	if (Spline->GetNumberOfSplinePoints() < 2)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Conveyor : Spline needs at least 2 points for movement!"));
+		UE_LOG(LogTemp, Warning, TEXT("Conveyor : 스플라인은 2개의 포인트를 필요로 합니다!!"));
 	}
 	// 스플라인 시작 지점의 위치와 회전 캐시
 	SplineStartLocation = Spline->GetLocationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
@@ -91,6 +90,7 @@ void AConveyor::Tick(float DeltaTime)
 				+ SplineRightVector * CurrentInfo.RelativeOffsetFromSpline.Y
 				+ SplineUpVector * CurrentInfo.RelativeOffsetFromSpline.Z;
 
+			//CurrnetInfo.Block->SetActorLocationAndRotation()
 			CurrentInfo.Block->SetActorLocation(FinalBlockLocation);
 			CurrentInfo.Block->SetActorRotation(SplineRotation);
 			//
@@ -123,12 +123,11 @@ void AConveyor::InitializeBlockPool()
 		EBlockType CurrentType = static_cast<EBlockType>(i);
 		int32 PoolSize = MaxBlockPoolSizes.Contains(CurrentType) ? MaxBlockPoolSizes[CurrentType] : 10;
 
-		//UE_LOG(LogTemp, Log, TEXT("Conveyor : Initializing pool for type %s with size %d"), *UEnum::GetValueAsString(TEXT("EBlockType"), CurrentType), PoolSize);
-
 		if (!AvailableBlockPools.Contains(CurrentType))
 		{
 			AvailableBlockPools.Add(CurrentType, new TQueue<AKrillBlock*>());
 		}
+		// 풀크기만큼 할당
 		for (int32 j = 0; j < PoolSize; j++)
 		{
 			AKrillBlock* NewBlock = GetWorld()->SpawnActor<AKrillBlock>(GetActorLocation(), FRotator::ZeroRotator);
@@ -146,9 +145,10 @@ void AConveyor::InitializeBlockPool()
 		}
 	}
 	
-	UE_LOG(LogTemp, Log, TEXT("Conveyor : All block pools Initialized."));
+	UE_LOG(LogTemp, Log, TEXT("Conveyor : 모든 블록을 풀에 담았습니다!"));
 }
 
+// 블록 스폰 함수
 void AConveyor::TrySpawnNextBlock()
 {
 	// 현재 < 총 갯수
@@ -234,6 +234,7 @@ void AConveyor::ReturnBlockToPool(AKrillBlock* BlockToReturn)
 	}
 }
 
+// 절삭기(CuttinMachine) 전용
 void AConveyor::AddBlockToConveyorAtWorldLocation(AKrillBlock* Block, const FVector& WorldLocation, const FRotator& WorldRotation)
 {
 	if (Block && Spline)

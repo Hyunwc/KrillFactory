@@ -49,6 +49,4 @@ public:
 public:
 	// 블록 타입 설정 함수
 	void SetBlockType(EBlockType NewType);
-	//// 메시를 블록 타입에 맞게 업데이트하는 함수
-	//void UpdateMeshForBlockType();
 };
