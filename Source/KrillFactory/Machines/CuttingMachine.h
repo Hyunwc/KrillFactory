@@ -41,6 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CuttingMachine")
 	int32 NumberOfBlades; // 칼날 개수
+
 private:
 	// 실제 칼날 메시 인스턴스를 저장할 배열
 	UPROPERTY()
@@ -54,7 +55,7 @@ private:
 	UPROPERTY()
 	TSet<AKrillBlock*> BlocksInCuttingZone;
 
-	// 잘린 블록이 다시 들어오는 거승ㄹ 막기 위한 쿨다운(옵션)
+	// 잘린 블록이 다시 들어오는 것을 막기 위한 쿨다운(옵션)
 	FTimerHandle CuttingCooldownTimerHandle;
 	void ClearCuttingCooldown();
 	bool bIncuttingCooldown;

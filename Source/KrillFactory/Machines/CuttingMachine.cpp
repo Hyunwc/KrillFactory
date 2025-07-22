@@ -37,12 +37,12 @@ void ACuttingMachine::BeginPlay()
 		FoundConveyor = Cast<AConveyor>(FoundActors[0]);
 		if (!FoundConveyor)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("CuttingMachine : Found Conveyor type cast Faild!!"));
+			UE_LOG(LogTemp, Warning, TEXT("CuttingMachine : 컨베이어 캐스팅에 실패했습니다!"));
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CuttingMachine : Not Found Conveyor!!"));
+		UE_LOG(LogTemp, Warning, TEXT("CuttingMachine : 컨베이어가 없어요!!"));
 	}
 
 	CuttingZone->OnComponentBeginOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapBegin);
@@ -75,33 +75,23 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 		}
 		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
-		//const float QuarterCubeHalfYExtent = 100.0f * 0.2f / 2.0f;
-
-		//float HalfFullY = 0.8f / 2.0f;
-		//float HalfQuarterY = 0.2f / 2.0f;
-
-		//TArray<FVector> Offsets;
-		//// 첫 번짼
-		//Offsets.Add(FVector(0.0f, -HalfFullY + HalfQuarterY, 0.0f));
-		//Offsets.Add(FVector(0.0f, -HalfFullY + HalfQuarterY * 3, 0.0f));
-		//Offsets.Add(FVector(0.0f, HalfFullY - HalfQuarterY * 3, 0.0f));
-		//Offsets.Add(FVector(0.0f, HalfFullY - HalfQuarterY, 0.0f));
-
-		TArray<float> Y_Offsets_cm;
-		Y_Offsets_cm.Add(-30.f);
-		Y_Offsets_cm.Add(-10.f);
-		Y_Offsets_cm.Add(10.f);
-		Y_Offsets_cm.Add(30.f);
+		// 분할되었을 때 블록 기준점
+		TArray<float> Y_Offsets;
+		Y_Offsets.Add(-30.f);
+		Y_Offsets.Add(-10.f);
+		Y_Offsets.Add(10.f);
+		Y_Offsets.Add(30.f);
 
 		for (int32 i = 0; i < 4; i++)
 		{
 			AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
 			if (NewQuaterBlock)
 			{
-				FVector LocalOffset = FVector(0.0f, Y_Offsets_cm[i], 0.0f);
+				FVector LocalOffset = FVector(0.0f, Y_Offsets[i], 0.0f);
 				FVector WorldOffset = OriginalRotation.RotateVector(LocalOffset);
 				FVector NewBlockLocation = OriginalLocation + WorldOffset;
 
+				// 분할된 블럭들 위치 지정해서 스폰시킴
 				FoundConveyor->AddBlockToConveyorAtWorldLocation(NewQuaterBlock, NewBlockLocation, OriginalRotation);
 			}
 		}
