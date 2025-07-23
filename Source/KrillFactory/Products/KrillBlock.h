@@ -37,14 +37,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Block")
 	EBlockType BlockType; // 블록 타입 변수 추가
 
-	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
-	UStaticMesh* FullBlockMesh;
+	//UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	//UStaticMesh* FullBlockMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
-	UStaticMesh* QuarterBlockMesh;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
-	UStaticMesh* EightBlockMesh;
+	//UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	//UStaticMesh* QuarterBlockMesh;
+	//
+	//UPROPERTY(EditDefaultsOnly, Category = "Block Meshs")
+	//UStaticMesh* EightBlockMesh;
 
 public:
 	// 블록 타입 설정 함수

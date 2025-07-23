@@ -23,7 +23,7 @@ ACuttingMachine::ACuttingMachine()
 
 	NumberOfBlades = 3;
 	FoundConveyor = nullptr;
-	bIncuttingCooldown = false;
+	//bIncuttingCooldown = false;
 }
 
 void ACuttingMachine::BeginPlay()
@@ -48,7 +48,7 @@ void ACuttingMachine::BeginPlay()
 	CuttingZone->OnComponentBeginOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapBegin);
 	CuttingZone->OnComponentEndOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapEnd);
 
-	SpawnBlades();
+	//SpawnBlades();
 }
 
 void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -75,25 +75,11 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 		}
 		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
-		// 분할되었을 때 블록 기준점
-		TArray<float> Y_Offsets;
-		Y_Offsets.Add(-30.f);
-		Y_Offsets.Add(-10.f);
-		Y_Offsets.Add(10.f);
-		Y_Offsets.Add(30.f);
-
-		for (int32 i = 0; i < 4; i++)
+		AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
+		if (NewQuaterBlock)
 		{
-			AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
-			if (NewQuaterBlock)
-			{
-				FVector LocalOffset = FVector(0.0f, Y_Offsets[i], 0.0f);
-				FVector WorldOffset = OriginalRotation.RotateVector(LocalOffset);
-				FVector NewBlockLocation = OriginalLocation + WorldOffset;
-
-				// 분할된 블럭들 위치 지정해서 스폰시킴
-				FoundConveyor->AddBlockToConveyorAtWorldLocation(NewQuaterBlock, NewBlockLocation, OriginalRotation);
-			}
+			// 분할된 블럭들 위치 지정해서 스폰시킴
+			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation, OriginalRotation);
 		}
 	}
 }
@@ -108,35 +94,4 @@ void ACuttingMachine::Tick(float DeltaTime)
 
 }
 
-void ACuttingMachine::ClearCuttingCooldown()
-{
-	bIncuttingCooldown = false;
-}
-
-void ACuttingMachine::SpawnBlades()
-{
-	if (!BladeMesh->GetStaticMesh())
-	{
-		return;
-	}
-
-	// 첫번째 칼날
-	BladeInstance.Add(BladeMesh);
-
-	// 나머지 칼날. 칼갯수가 1이면 생성x
-	for (int32 i = 1; i < NumberOfBlades; i++)
-	{
-		UStaticMeshComponent* NewBlade = NewObject<UStaticMeshComponent>(this, FName(*FString::Printf(TEXT("BladeMesh%d"), i)));
-		if (NewBlade)
-		{
-			NewBlade->SetStaticMesh(BladeMesh->GetStaticMesh());
-			NewBlade->SetupAttachment(RootComponent);
-			NewBlade->SetRelativeLocation(FVector(0.0f, (float)i * 100.f, 0.0f));
-			NewBlade->SetRelativeScale3D(BladeMesh->GetRelativeScale3D());
-			NewBlade->RegisterComponent();
-
-			BladeInstance.Add(NewBlade);
-		}
-	}
-}
 
