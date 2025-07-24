@@ -21,9 +21,9 @@ AConveyor::AConveyor()
 	BlocksSpawnedCount = 0;
 
 	// 타입별 기본 풀 크기 설정(에디터에서 오버라이드 가능)
-	MaxBlockPoolSizes.Add(EBlockType::EBT_Full, 30);
+	MaxBlockPoolSizes.Add(EBlockType::EBT_Full, 50);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Quarter, 30);
-	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 30);
+	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 100);
 }
 
 void AConveyor::BeginPlay()
