@@ -53,6 +53,11 @@ void ACuttingMachine::BeginPlay()
 
 void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
+}
+
+void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
 	AKrillBlock* OverlappingBlock = Cast<AKrillBlock>(OtherActor);
 
 	if (!OverlappingBlock)
@@ -82,10 +87,6 @@ void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedC
 			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation, OriginalRotation);
 		}
 	}
-}
-
-void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
 }
 
 void ACuttingMachine::Tick(float DeltaTime)

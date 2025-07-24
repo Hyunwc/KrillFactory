@@ -1,14 +1,18 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Products/KrillBlock.h"
+#include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 AKrillBlock::AKrillBlock()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	SetRootComponent(Root);
+
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
-	SetRootComponent(BlockMesh);
+	BlockMesh->SetupAttachment(Root);
 
 	BlockMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BlockMesh->SetGenerateOverlapEvents(true);
