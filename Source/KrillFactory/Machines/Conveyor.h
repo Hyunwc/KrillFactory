@@ -85,7 +85,7 @@ private:
 	
 	// 스플라인 시작 지점의 월드 위치 및 회전
 	FVector SplineStartLocation;
-	FRotator SplineStartRotation;
+	//FRotator SplineStartRotation;
 
 public:
 	void InitializeBlockPool(); // 풀 초기화
@@ -100,5 +100,5 @@ public:
 
 	// 특정 위치에 블록을 스플라인에 추가하는 함수(절삭기용)
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
-	void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation, const FRotator& WorldRotation);
+	void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
 };

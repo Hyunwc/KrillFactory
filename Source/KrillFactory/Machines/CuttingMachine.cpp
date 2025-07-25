@@ -70,7 +70,7 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 	{
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
-		FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
+		//FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
 
 		// 2. 기존 풀 블록을 컨베이어 풀로 반납
 		if (!FoundConveyor)
@@ -84,7 +84,28 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 		if (NewQuaterBlock)
 		{
 			// 분할된 블럭들 위치 지정해서 스폰시킴
-			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation, OriginalRotation);
+			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation/*, OriginalRotation*/);
+		}
+	}
+	else if (OverlappingBlock->BlockType == EBlockType::EBT_Quarter)
+	{
+		// 1. 기존 풀 블록의 위치와 회전 저장
+		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
+		//FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
+
+		// 2. 기존 풀 블록을 컨베이어 풀로 반납
+		if (!FoundConveyor)
+		{
+			UE_LOG(LogTemp, Error, TEXT("CuttingMachine : Conveyor Not Found!"));
+			return;
+		}
+		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
+
+		AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Eighth);
+		if (NewQuaterBlock)
+		{
+			// 분할된 블럭들 위치 지정해서 스폰시킴
+			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation/*, OriginalRotation*/);
 		}
 	}
 }
