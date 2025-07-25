@@ -36,7 +36,7 @@ void AConveyor::BeginPlay()
 	}
 	// 스플라인 시작 지점의 위치와 회전 캐시
 	SplineStartLocation = Spline->GetLocationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
-	SplineStartRotation = Spline->GetRotationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
+	//SplineStartRotation = Spline->GetRotationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 
 	// 블록 풀 초기화
 	InitializeBlockPool();
@@ -76,10 +76,10 @@ void AConveyor::Tick(float DeltaTime)
 			else
 			{
 				FVector SplineLocation = Spline->GetLocationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
-				FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
+				//FRotator SplineRotation = Spline->GetRotationAtDistanceAlongSpline(CurrentInfo.DistanceAlongSpline, ESplineCoordinateSpace::World);
 
 				CurrentInfo.Block->SetActorLocation(SplineLocation);
-				CurrentInfo.Block->SetActorRotation(SplineRotation);
+				//CurrentInfo.Block->SetActorRotation(SplineRotation);
 			}
 		}
 		else
@@ -141,7 +141,7 @@ void AConveyor::TrySpawnNextBlock()
 		{
 			// 스플라인 시작 지점에 블록 배치
 			NewActiveBlock->SetActorLocation(SplineStartLocation);
-			NewActiveBlock->SetActorRotation(SplineStartRotation);
+			//NewActiveBlock->SetActorRotation(SplineStartRotation);
 
 			FActiveBlockInfo NewInfo;
 			NewInfo.Block = NewActiveBlock;
@@ -204,13 +204,13 @@ void AConveyor::ReturnBlockToPool(AKrillBlock* BlockToReturn)
 	}
 }
 
-void AConveyor::AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation, const FRotator& WorldRotation)
+void AConveyor::AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/)
 {
 	if (Block && Spline)
 	{
 		// 블록의 월드위치와 회전을 설정
 		Block->SetActorLocation(WorldLocation);
-		Block->SetActorRotation(WorldRotation);
+		//Block->SetActorRotation(WorldRotation);
 
 		float ClosestInputKey = Spline->FindInputKeyClosestToWorldLocation(WorldLocation);
 		float Distance = Spline->GetDistanceAlongSplineAtSplineInputKey(ClosestInputKey);
