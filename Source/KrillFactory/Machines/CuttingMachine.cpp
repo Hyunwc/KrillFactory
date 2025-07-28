@@ -2,6 +2,7 @@
 
 
 #include "Machines/CuttingMachine.h"
+#include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Products/KrillBlock.h"
@@ -12,8 +13,11 @@ ACuttingMachine::ACuttingMachine()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Root;
 	BladeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBladeMesh"));
-	RootComponent = BladeMesh;
+	BladeMesh->SetupAttachment(Root);
+	BladeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	CuttingZone = CreateDefaultSubobject<UBoxComponent>(TEXT("CuttingZone"));
 	CuttingZone->SetupAttachment(RootComponent);
@@ -21,8 +25,9 @@ ACuttingMachine::ACuttingMachine()
 	CuttingZone->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	CuttingZone->SetGenerateOverlapEvents(true);
 
-	NumberOfBlades = 3;
 	FoundConveyor = nullptr;
+
+	EightSpawnInterval = 0.1f;
 	//bIncuttingCooldown = false;
 }
 
@@ -100,20 +105,49 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 			return;
 		}
 		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
+		
+		GetWorldTimerManager().ClearTimer(EighthTimer);
+		PendingSpawnEighthBlocks.Empty();
 
-		AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Eighth);
-		if (NewQuaterBlock)
+		for (int32 i = 0; i < 4; i++)
 		{
-			// 분할된 블럭들 위치 지정해서 스폰시킴
-			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation/*, OriginalRotation*/);
+			AKrillBlock* NewEighthBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Eighth);
+			if (NewEighthBlock)
+			{
+				PendingSpawnEighthBlocks.Add(NewEighthBlock);
+				//GetWorldTimerManager().SetTimer(EighthTimer, this, )
+				//// 분할된 블럭들 위치 지정해서 스폰시킴
+				//FoundConveyor->AddBlockToConveyor(NewEighthBlock, OriginalLocation/*, OriginalRotation*/);
+			}
+		}
+		
+		if (PendingSpawnEighthBlocks.Num() > 0)
+		{
+			GetWorldTimerManager().SetTimer(EighthTimer, this, &ACuttingMachine::SpawnNextEighthBlock, EightSpawnInterval, true, 0.0f);
 		}
 	}
+
+	//GetWorldTimerManager().ClearTimer(EighthTimer);
 }
 
 void ACuttingMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ACuttingMachine::SpawnNextEighthBlock()
+{
+	if (PendingSpawnEighthBlocks.Num() == 0)
+	{
+		GetWorldTimerManager().ClearTimer(EighthTimer);
+		return; 
+	}
+
+	AKrillBlock* EighthToSpawn = PendingSpawnEighthBlocks[0];
+	PendingSpawnEighthBlocks.RemoveAt(0);
+
+	FoundConveyor->AddBlockToConveyor(EighthToSpawn, CuttingZoneExitLocation/*, OriginalRotation*/);
 }
 
 
