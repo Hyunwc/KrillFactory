@@ -12,6 +12,7 @@ enum class EBlockType : uint8
 	EBT_Full	UMETA(DisplayName = "Full Block"),	  // 원래 크기 
 	EBT_Quarter UMETA(DisplayName = "Quarter Block"), // 4등분된
 	EBT_Eighth	UMETA(DisplayName = "Eighth Block"),  // 8등분된 (추후 확장),
+	EBT_Pack	UMETA(DisplayName = "Packed Block"),
 
 	EBT_Max UMETA(Hidden)// 센티널 값
 };
