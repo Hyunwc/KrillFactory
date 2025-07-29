@@ -58,6 +58,7 @@ void AKrillBlock::SetBlockType(EBlockType NewType)
 		ScaleToUse = FVector(0.4f, 0.2f, 0.2f); 
 		break;
 	case EBlockType::EBT_Eighth:
+	case EBlockType::EBT_Pack:
 		ScaleToUse = FVector(0.2f, 0.2f, 0.2f);
 		break;
 	default:

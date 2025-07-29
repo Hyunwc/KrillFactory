@@ -24,6 +24,7 @@ AConveyor::AConveyor()
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Full, 50);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Quarter, 30);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 100);
+	MaxBlockPoolSizes.Add(EBlockType::EBT_Pack, 100);
 }
 
 void AConveyor::BeginPlay()

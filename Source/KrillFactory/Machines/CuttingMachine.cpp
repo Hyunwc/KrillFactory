@@ -20,7 +20,7 @@ ACuttingMachine::ACuttingMachine()
 	BladeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	CuttingZone = CreateDefaultSubobject<UBoxComponent>(TEXT("CuttingZone"));
-	CuttingZone->SetupAttachment(RootComponent);
+	CuttingZone->SetupAttachment(Root);
 	CuttingZone->SetBoxExtent(FVector(150.0f, 150.0f, 100.0f));
 	CuttingZone->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	CuttingZone->SetGenerateOverlapEvents(true);
@@ -52,8 +52,6 @@ void ACuttingMachine::BeginPlay()
 
 	CuttingZone->OnComponentBeginOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapBegin);
 	CuttingZone->OnComponentEndOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapEnd);
-
-	//SpawnBlades();
 }
 
 void ACuttingMachine::OnCuttingZoneOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -73,6 +71,8 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 	// 오버랩된 블록타입 확인
 	if (OverlappingBlock->BlockType == EBlockType::EBT_Full)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Cutt : Overlap!!")));
+
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
 		//FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
