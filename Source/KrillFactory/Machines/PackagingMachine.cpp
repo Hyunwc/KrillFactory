@@ -47,6 +47,7 @@ void APackagingMachine::BeginPlay()
 
 void APackagingMachine::OnPackagingZoneOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+
 }
 
 void APackagingMachine::OnPackagingZoneOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -71,6 +72,8 @@ void APackagingMachine::OnPackagingZoneOverlapEnd(UPrimitiveComponent* Overlappe
 		{
 			return;
 		}
+
+		//OverlappingBlock->SetActorHiddenInGame(true);
 		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
 		AKrillBlock* NewPackBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Pack);
