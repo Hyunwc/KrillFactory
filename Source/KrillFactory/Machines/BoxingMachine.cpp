@@ -2,9 +2,10 @@
 
 
 #include "Machines/BoxingMachine.h"
+#include "Machines/Conveyor.h"
+#include "Machines/MainPower.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
-#include "Machines/Conveyor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
 
@@ -23,9 +24,10 @@ ABoxingMachine::ABoxingMachine()
 
 	PackCount = 0;
 	bBoxingComplete = false;
-
+	
+	bIsPowerOn = false;
 	FoundConveyor = nullptr;
-
+	MainPower = nullptr;
 }
 
 void ABoxingMachine::BeginPlay()
@@ -45,6 +47,18 @@ void ABoxingMachine::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BoxingMachine : 컨베이어가 없어요!!"));
+	}
+
+	TArray<AActor*> FoundPowerActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainPower::StaticClass(), FoundPowerActors);
+	if (FoundPowerActors.Num() > 0)
+	{
+		MainPower = Cast<AMainPower>(FoundPowerActors[0]);
+		if (IsValid(MainPower))
+		{
+			MainPower->OnPowerStateChanged.AddDynamic(this, &ABoxingMachine::OnMainPowerStateChanged);
+			UE_LOG(LogTemp, Log, TEXT("BoxingMachine : MainPower Delegate Binding Successed"));
+		}
 	}
 
 	BoxingZone->OnComponentBeginOverlap.AddDynamic(this, &ABoxingMachine::OnBoxingZoneOverlapBegin);
@@ -88,5 +102,19 @@ void ABoxingMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ABoxingMachine::OnMainPowerStateChanged(bool bPowerOn)
+{
+	bIsPowerOn = bPowerOn;
+
+	if (bIsPowerOn)
+	{
+		BoxingZone->SetGenerateOverlapEvents(true);
+	}
+	else
+	{
+		BoxingZone->SetGenerateOverlapEvents(false);
+	}
 }
 

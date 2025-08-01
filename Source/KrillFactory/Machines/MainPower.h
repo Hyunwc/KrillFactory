@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MainPower.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FPowerOn, bool);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPowerStateChanged, bool, bIsPowerOn);
 
 UCLASS()
 class KRILLFACTORY_API AMainPower : public AActor
@@ -16,11 +16,18 @@ class KRILLFACTORY_API AMainPower : public AActor
 public:	
 	AMainPower();
 
-	void TogglePower(bool bOn);
+	//void TogglePower(bool bOn);
 
 public:
-	UPROPERTY(BlueprintReadOnly)
-	bool bPowerOn;
 
-	//FPowerOn PowerOn; // 다른 기계들이 바인딩 해야함
+	UPROPERTY(BlueprintAssignable, Category = "Power")
+	FOnPowerStateChanged OnPowerStateChanged;
+
+    UPROPERTY(BlueprintReadOnly)
+	bool bIsPowerOn;
+
+public:
+	UFUNCTION(CallInEditor, BlueprintCallable, Category = "Power")
+	void TogglePower();
+	
 };
