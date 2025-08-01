@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Machines/PackagingMachine.h"
+#include "Machines/Conveyor.h"
+#include "Machines/MainPower.h"
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
-#include "Machines/Conveyor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
 
@@ -19,7 +20,9 @@ APackagingMachine::APackagingMachine()
 	PackagingZone->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	PackagingZone->SetGenerateOverlapEvents(true);
 
+	bIsPowerOn = false;
 	FoundConveyor = nullptr;
+	MainPower = nullptr;
 }
 
 void APackagingMachine::BeginPlay()
@@ -39,6 +42,18 @@ void APackagingMachine::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PackagingMachine : 컨베이어가 없어요!!"));
+	}
+
+	TArray<AActor*> FoundPowerActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainPower::StaticClass(), FoundPowerActors);
+	if (FoundPowerActors.Num() > 0)
+	{
+		MainPower = Cast<AMainPower>(FoundPowerActors[0]);
+		if (IsValid(MainPower))
+		{
+			MainPower->OnPowerStateChanged.AddDynamic(this, &APackagingMachine::OnMainPowerStateChanged);
+			UE_LOG(LogTemp, Log, TEXT("PackagingMachine : MainPower Delegate Binding Successed"));
+		}
 	}
 
 	PackagingZone->OnComponentBeginOverlap.AddDynamic(this, &APackagingMachine::OnPackagingZoneOverlapBegin);
@@ -89,5 +104,19 @@ void APackagingMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APackagingMachine::OnMainPowerStateChanged(bool bPowerOn)
+{
+	bIsPowerOn = bPowerOn;
+
+	if (bIsPowerOn)
+	{
+		PackagingZone->SetGenerateOverlapEvents(true);
+	}
+	else
+	{
+		PackagingZone->SetGenerateOverlapEvents(false);
+	}
 }
 

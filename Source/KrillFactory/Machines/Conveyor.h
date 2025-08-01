@@ -51,9 +51,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USplineComponent* Spline; // 블록들 이동 경로
 
-	UPROPERTY(VisibleAnywhere, Category = "Power")
-	bool bPowerOn; // 기계의 전원
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Conveyor")
 	float MoveSpeed; // 컨베이어 속도
 
@@ -74,6 +71,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "BlockPool")
 	TMap<EBlockType, int32> MaxBlockPoolSizes; // 타입별 최대 풀 크기
+
+	UPROPERTY()
+	class AMainPower* MainPower; // 델리게이트 사용을 위한 참조
 
 private:
 
@@ -101,4 +101,12 @@ public:
 	// 특정 위치에 블록을 스플라인에 추가하는 함수(절삭기용)
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
 	void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Power")
+	bool bIsPowerOn; // 기계의 전원
+
+	// 델리게이트에 등록할 함수
+	UFUNCTION()
+	void OnMainPowerStateChanged(bool bPowerOn);
 };

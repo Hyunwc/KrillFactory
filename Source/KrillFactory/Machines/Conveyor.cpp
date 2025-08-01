@@ -5,6 +5,7 @@
 #include "Components/SplineComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
+#include "Machines/MainPower.h"
 
 AConveyor::AConveyor()
 {
@@ -12,8 +13,6 @@ AConveyor::AConveyor()
 
 	Spline = CreateDefaultSubobject< USplineComponent>(TEXT("Spline"));
 	SetRootComponent(Spline);
-
-	bPowerOn = false;
 
 	MoveSpeed = 100.0f;
 	BlockSpawnInterval = 2.0f;  // 2초 간격으로 블록 투입
@@ -25,6 +24,9 @@ AConveyor::AConveyor()
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Quarter, 30);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 100);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Pack, 100);
+
+	bIsPowerOn = false;
+	MainPower = nullptr;
 }
 
 void AConveyor::BeginPlay()
@@ -42,16 +44,27 @@ void AConveyor::BeginPlay()
 	// 블록 풀 초기화
 	InitializeBlockPool();
 
-	// 첫 블록 투입 타이머 시작(처음엔 바로 투입)
-	if (NumBlocksToSpawn > 0)
+	TArray<AActor*> FoundPowerActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainPower::StaticClass(), FoundPowerActors);
+	if (FoundPowerActors.Num() > 0)
 	{
-		GetWorldTimerManager().SetTimer(BlockSpawnTimerHandle, this, &AConveyor::TrySpawnNextBlock, BlockSpawnInterval, true, 0.0f);
+		MainPower = Cast<AMainPower>(FoundPowerActors[0]);
+		if (IsValid(MainPower))
+		{
+			MainPower->OnPowerStateChanged.AddDynamic(this, &AConveyor::OnMainPowerStateChanged);
+			UE_LOG(LogTemp, Log, TEXT("Conveyor : MainPower Delegate Binding Successed"));
+		}
 	}
 }
 
 void AConveyor::EndPlay(const EEndPlayReason::Type Reason)
 {
 	Super::EndPlay(Reason);
+	// 구독 해제
+	if (IsValid(MainPower))
+	{
+		MainPower->OnPowerStateChanged.RemoveDynamic(this, &AConveyor::OnMainPowerStateChanged);
+	}
 }
 
 void AConveyor::Tick(float DeltaTime)
@@ -220,6 +233,29 @@ void AConveyor::AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocat
 		NewInfo.Block = Block;
 		NewInfo.DistanceAlongSpline = Distance;
 		ActiveBlocks.Add(NewInfo);
+	}
+}
+
+void AConveyor::OnMainPowerStateChanged(bool bPowerOn)
+{
+	// 델리게이트 신호에 따라 컨베이어의 전원 상태를 업데이트
+	bIsPowerOn = bPowerOn;
+
+	if (bIsPowerOn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan,	FString::Printf(TEXT("Conveyor : Power On")));
+		// 첫 블록 투입 타이머 시작(처음엔 바로 투입)
+		if (NumBlocksToSpawn > 0)
+		{
+			MoveSpeed = 100.0f;
+			GetWorldTimerManager().SetTimer(BlockSpawnTimerHandle, this, &AConveyor::TrySpawnNextBlock, BlockSpawnInterval, true, 0.0f);
+		}
+	}
+	else
+	{
+		MoveSpeed = 0.0f;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Conveyor : Power Off")));
+		GetWorldTimerManager().ClearTimer(BlockSpawnTimerHandle);
 	}
 }
 

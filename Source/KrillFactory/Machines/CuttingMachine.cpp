@@ -2,12 +2,14 @@
 
 
 #include "Machines/CuttingMachine.h"
+#include "Machines/Conveyor.h"
+#include "Machines/MainPower.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Products/KrillBlock.h"
-#include "Machines/Conveyor.h"
 #include "Kismet/GameplayStatics.h"
+
 
 ACuttingMachine::ACuttingMachine()
 {
@@ -28,6 +30,9 @@ ACuttingMachine::ACuttingMachine()
 	FoundConveyor = nullptr;
 
 	EightSpawnInterval = 0.1f;
+
+	bIsPowerOn = false;
+	MainPower = nullptr;
 	//bIncuttingCooldown = false;
 }
 
@@ -48,6 +53,18 @@ void ACuttingMachine::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CuttingMachine : 컨베이어가 없어요!!"));
+	}
+
+	TArray<AActor*> FoundPowerActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainPower::StaticClass(), FoundPowerActors);
+	if (FoundPowerActors.Num() > 0)
+	{
+		MainPower = Cast<AMainPower>(FoundPowerActors[0]);
+		if (IsValid(MainPower))
+		{
+			MainPower->OnPowerStateChanged.AddDynamic(this, &ACuttingMachine::OnMainPowerStateChanged);
+			UE_LOG(LogTemp, Log, TEXT("CuttingMachine : MainPower Delegate Binding Successed"));
+		}
 	}
 
 	CuttingZone->OnComponentBeginOverlap.AddDynamic(this, &ACuttingMachine::OnCuttingZoneOverlapBegin);
@@ -134,6 +151,25 @@ void ACuttingMachine::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ACuttingMachine::OnMainPowerStateChanged(bool bPowerOn)
+{
+	// 파워 토글 로직 
+	bIsPowerOn = bPowerOn;
+
+	// On시 톱날 회전(아직 없지만) 시작 + 이벤트 활성화
+	// off시 반대로
+	if (bIsPowerOn)
+	{
+		// TODO : 여기에 톱날 회전 애니메이션 또는 함수를 추가합니다.
+		CuttingZone->SetGenerateOverlapEvents(true);
+	}
+	else
+	{
+		CuttingZone->SetGenerateOverlapEvents(false);
+	}
+	
 }
 
 void ACuttingMachine::SpawnNextEighthBlock()
