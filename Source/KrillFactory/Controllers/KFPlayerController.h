@@ -43,6 +43,11 @@ private:
 	UPROPERTY()
 	UUserWidget* PopupWidget;
 
+	UPROPERTY()
+	int32 ElapsedTime; // 경과 시간을 초 단위로 저장
+
+	FTimerHandle ElapsedTimerHandle; // 타이머 핸들
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Power")
 	void ToggleMainPower();  // Widget에서 버튼 클릭시 호출할 함수
@@ -52,4 +57,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	void ShowMachinePopup(FText MachineName);
+
+	UFUNCTION()
+	void UpdateTime(); // 매초마다 호출될 타이머
+
+	UFUNCTION(BlueprintPure, Category = "Game State")
+	FText GetElapsedTimeText() const;
 };
