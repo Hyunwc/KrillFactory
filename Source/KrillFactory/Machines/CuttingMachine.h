@@ -10,6 +10,7 @@ class AConveyor;
 class AKrillBlock;
 class UBoxComponent;
 class UStaticMeshComponent;
+class UKFData;
 
 UCLASS()
 class KRILLFACTORY_API ACuttingMachine : public AActor
@@ -58,6 +59,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Power")
 	bool bIsPowerOn; // 기계의 전원
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Machine Data")
+	UKFData* MachineData;
 
 	// 델리게이트에 등록할 함수
 	UFUNCTION()
