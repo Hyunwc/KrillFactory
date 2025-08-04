@@ -5,9 +5,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Machines/MainPower.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetTextLibrary.h"
 #include "Camera/CameraActor.h"
 #include "Components/TextBlock.h"
-#include "Kismet/KismetTextLibrary.h"
 
 AKFPlayerController::AKFPlayerController()
 {
