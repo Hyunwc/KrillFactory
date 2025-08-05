@@ -4,19 +4,18 @@
 #include "Machines/CuttingMachine.h"
 #include "Machines/Conveyor.h"
 #include "Machines/MainPower.h"
-#include "Components/SceneComponent.h"
+//#include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Products/KrillBlock.h"
 #include "Kismet/GameplayStatics.h"
 
-
 ACuttingMachine::ACuttingMachine()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
+	//Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	//RootComponent = Root;
 	BladeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MainBladeMesh"));
 	BladeMesh->SetupAttachment(Root);
 	BladeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
