@@ -44,4 +44,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void InitDataPopup();
 
+	//UFUNCTION(BlueprintCallable)
+	//virtual void BeginFocus() override;
+	//
+	//UFUNCTION(BlueprintCallable)
+	//virtual void EndFocus() override;
 };
