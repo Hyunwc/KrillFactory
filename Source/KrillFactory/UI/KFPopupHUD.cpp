@@ -12,9 +12,9 @@ void AKFPopupHUD::ShowPopup(const FText& InNameText, const FText& InInfoText)
 		PopupWidget->AddToViewport();
 	}
 
-	if (PopupWidget)
-	{
-		PopupWidget->UpdatePopupContent(InNameText, InInfoText);
-		PopupWidget->SetVisibility(ESlateVisibility::Visible);
-	}
+	//if (PopupWidget)
+	//{
+	//	PopupWidget->UpdatePopupContent(InNameText, InInfoText);
+	//	PopupWidget->SetVisibility(ESlateVisibility::Visible);
+	//}
 }

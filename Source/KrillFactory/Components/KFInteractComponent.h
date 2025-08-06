@@ -25,9 +25,6 @@ public:
 
 public:
 	UPROPERTY(VisibleAnywhere)
-	bool bIsFocus;
-
-	UPROPERTY(VisibleAnywhere)
 	AKFMachineBase* Owner;
 
 	UPROPERTY(VisibleAnywhere)

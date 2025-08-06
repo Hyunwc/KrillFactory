@@ -66,5 +66,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UWidgetComponent* GetPopupWidget() { return PopupWidget; }
 
+	UFUNCTION(BlueprintCallable)
+	UWidgetComponent* GetButtonWidget() { return ButtonWidget; }
+
 	UKFData* GetData() { return MachineData; }
 };

@@ -14,7 +14,6 @@ UKFInteractComponent::UKFInteractComponent()
 {
     // 만약 InitializeComponent()를 사용하고 싶다면 이 값을 true로
 	PrimaryComponentTick.bCanEverTick = false;
-	bIsFocus = false;
 }
 
 
@@ -35,47 +34,30 @@ void UKFInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UKFInteractComponent::BeginFocus()
 {
-	if (bIsFocus)
-	{
-		return;
-	}
-
-	bIsFocus = true;
-
 	if (Owner)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Interact : Owner Ok!!")));
-
 		if (PC)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Interact : PC Ok!!")));
-
 			if (PC->PopupHUD)
 			{
-				PC->PopupHUD->UpdatePopupContent(Owner->MachineData->Name, Owner->MachineData->Info);
+				PC->PopupHUD->UpdatePopupContent(Owner->MachineData->Name, Owner->MachineData->Info, Owner->MachineData->Icon);
 				PC->PopupHUD->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			}
+
+			//if (UWidgetComponent* Button = Owner->GetButtonWidget())
+			//{
+			//	Button->SetVisibility(true);
+			//}
 		}
     }
 }
 
 void UKFInteractComponent::EndFocus()
 {
-	if (!bIsFocus)
-	{
-		return;
-	}
-
-	bIsFocus = false;
-
 	if (Owner)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Interact : Owner Ok!!")));
-
 		if (PC)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Interact : PC Ok!!")));
-
 			if (PC->PopupHUD)
 			{
 				PC->PopupHUD->SetVisibility(ESlateVisibility::Hidden);
@@ -86,5 +68,23 @@ void UKFInteractComponent::EndFocus()
 
 void UKFInteractComponent::Click()
 {
+	//TODO : 나중에 시간날때 구현..
+	
+	//if (Owner)
+	//{
+	//	if (UWidgetComponent* Button = Owner->GetButtonWidget())
+	//	{
+	//		Button->SetVisibility(false);
+	//	}
+	//
+	//	if (PC)
+	//	{
+	//		if (PC->PopupHUD)
+	//		{
+	//			//PC->PopupHUD->UpdatePopupContent(Owner->MachineData->Name, Owner->MachineData->Info);
+	//			PC->PopupHUD->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	//		}
+	//	}
+	//}
 }
 

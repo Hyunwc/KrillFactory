@@ -7,6 +7,8 @@
 #include "KFPopupUserWidget.generated.h"
 
 class UTextBlock;
+class UImage;
+class UTexture2D;
 /**
  * 
  */
@@ -25,11 +27,15 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Txt_Info;
 
+	UPROPERTY(meta = (BindWidget))
+	UImage* Img_Icon;
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Popup Widget")
-	void UpdatePopupContent(const FText& InNameText, const FText& InInfoText);
+	void UpdatePopupContent(const FText& InNameText, const FText& InInfoText, UTexture2D* InIcon);
 
 private:
 	FText CachedName;
 	FText CachedInfo;
+	//UImage* CachedIcon;
 };
