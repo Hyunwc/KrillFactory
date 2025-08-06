@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "KFMachineBase.h"
 #include "PackagingMachine.generated.h"
 
 UCLASS()
-class KRILLFACTORY_API APackagingMachine : public AActor
+class KRILLFACTORY_API APackagingMachine : public AKFMachineBase
 {
 	GENERATED_BODY()
 	
@@ -29,8 +30,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class USceneComponent* Root;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* PackagingZone;
@@ -38,10 +37,6 @@ public:
 public:
 	UPROPERTY()
 	class AMainPower* MainPower; // 델리게이트 사용을 위한 참조
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Power")
-	bool bIsPowerOn; // 기계의 전원
-
 	// 델리게이트에 등록할 함수
 	UFUNCTION()
 	void OnMainPowerStateChanged(bool bPowerOn);

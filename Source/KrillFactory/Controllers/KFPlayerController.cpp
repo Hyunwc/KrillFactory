@@ -8,6 +8,7 @@
 #include "Kismet/KismetTextLibrary.h"
 #include "Camera/CameraActor.h"
 #include "Components/TextBlock.h"
+#include "UI/KFPopupUserWidget.h"
 
 AKFPlayerController::AKFPlayerController()
 {
@@ -40,6 +41,16 @@ void AKFPlayerController::BeginPlay()
 			MainHUD->AddToViewport();
 			// 마우스 커서가 보이게
 			//bShowMouseCursor = true; 
+		}
+	}
+
+	if (PopupWidgetClass)
+	{
+		PopupHUD = CreateWidget<UKFPopupUserWidget>(this, PopupWidgetClass);
+		if (PopupHUD)
+		{
+			PopupHUD->AddToViewport();
+			PopupHUD->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 
@@ -92,33 +103,6 @@ void AKFPlayerController::SwitchCamera(FName CameraTag)
 			// 부드럽게 시점 전환해주는 함수
 			SetViewTargetWithBlend(TargetCamera, 1.0f);
 			CurrentCamera = TargetCamera;
-		}
-	}
-}
-
-void AKFPlayerController::ShowMachinePopup(FText MachineName)
-{
-	if (MachinePopupWidgetClass && !PopupWidget)
-	{
-		PopupWidget = CreateWidget(this, MachinePopupWidgetClass);
-		if (PopupWidget)
-		{
-			PopupWidget->AddToViewport();
-
-			UTextBlock* MachineNameText = Cast<UTextBlock>(PopupWidget->GetWidgetFromName(TEXT("MachineName")));
-			if (MachineNameText)
-			{
-				MachineNameText->SetText(MachineName);
-			}
-		}
-	}
-	else if (MachinePopupWidgetClass)
-	{
-		PopupWidget->SetVisibility(ESlateVisibility::Visible);
-		UTextBlock* MachineNameText = Cast<UTextBlock>(PopupWidget->GetWidgetFromName(TEXT("MachineName")));
-		if (MachineNameText)
-		{
-			MachineNameText->SetText(MachineName);
 		}
 	}
 }

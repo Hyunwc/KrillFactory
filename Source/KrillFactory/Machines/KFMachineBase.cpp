@@ -25,8 +25,19 @@ AKFMachineBase::AKFMachineBase()
 	MouseInteractComponent->SetCollisionProfileName("NoCollision");
 
 	// 액터 컴포넌트는 자동으로 부착됨 SetupAttachment 필요업음
-	InteractComponent = CreateDefaultSubobject<UKFInteractComponent>(TEXT("Interact"));
-	
+	//InteractComponent = CreateDefaultSubobject<UKFInteractComponent>(TEXT("Interact"));
+	ButtonWidget = CreateDefaultSubobject< UWidgetComponent>(TEXT("Button"));
+	ButtonWidget->SetupAttachment(Root);
+	ButtonWidget->SetRelativeLocation(FVector::ZeroVector);
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> ButtonRef(TEXT("/Game/DT/Blueprints/Widgets/WBP_PopupDisplay.WBP_PopupDisplay_C"));
+	if (ButtonRef.Class != nullptr)
+	{
+		ButtonWidget->SetWidgetClass(ButtonRef.Class);
+	}
+
+	ButtonWidget->SetVisibility(false);
+
 	PopupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Popup"));
 	PopupWidget->SetupAttachment(Root);
 	PopupWidget->SetRelativeLocation(FVector::ZeroVector);

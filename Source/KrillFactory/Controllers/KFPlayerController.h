@@ -8,6 +8,7 @@
 
 class UUserWidget;
 class AMainPower;
+class UKFPopupUserWidget;
 
 /**
  * 
@@ -28,7 +29,10 @@ public:
 	TSubclassOf<UUserWidget> MainHUDWidgetClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUserWidget> MachinePopupWidgetClass;
+	TSubclassOf<UUserWidget> PopupWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite)
+	UKFPopupUserWidget* PopupHUD;
 
 private:
 	UPROPERTY()
@@ -54,9 +58,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Camera")
 	void SwitchCamera(FName CameraTag); // 카메라 변경 이벤트 함수
-
-	UFUNCTION(BlueprintCallable, Category = "UI")
-	void ShowMachinePopup(FText MachineName);
 
 	UFUNCTION()
 	void UpdateTime(); // 매초마다 호출될 타이머
