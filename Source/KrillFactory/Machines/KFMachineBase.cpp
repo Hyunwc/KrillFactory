@@ -7,6 +7,8 @@
 #include "Components/WidgetComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/TextBlock.h"
+#include "Components/BoxComponent.h"
+#include "Components/KFInteractComponent.h"
 #include "UI/KFPopupUserWidget.h"
 
 AKFMachineBase::AKFMachineBase()
@@ -16,6 +18,14 @@ AKFMachineBase::AKFMachineBase()
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = Root;
+
+	// TODO : MosueInteract용 콜리전 채널을 따로 만들어서 설정합니다
+	MouseInteractComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("MouseCollision"));
+	MouseInteractComponent->SetupAttachment(Root);
+	MouseInteractComponent->SetCollisionProfileName("NoCollision");
+
+	// 액터 컴포넌트는 자동으로 부착됨 SetupAttachment 필요업음
+	InteractComponent = CreateDefaultSubobject<UKFInteractComponent>(TEXT("Interact"));
 	
 	PopupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Popup"));
 	PopupWidget->SetupAttachment(Root);

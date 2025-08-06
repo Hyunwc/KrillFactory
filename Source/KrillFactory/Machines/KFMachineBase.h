@@ -9,6 +9,9 @@
 class UKFData;
 class UWidgetComponent;
 class USceneComponent;
+class UKFPopupUserWidget;
+class UBoxComponent;
+class UKFInteractComponent;
 
 UCLASS()
 class KRILLFACTORY_API AKFMachineBase : public AActor
@@ -30,15 +33,22 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power")
 	bool bIsPowerOn; // 기계 전원
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UWidgetComponent* PopupWidget; // 팝업 위젯
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* Root;
 
 	UPROPERTY(VisibleAnywhere)
-	class UKFPopupUserWidget* KFPopup;
+	UKFPopupUserWidget* KFPopup;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact")
+	UKFInteractComponent* InteractComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
+	UBoxComponent* MouseInteractComponent;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UWidgetComponent* PopupWidget; // 팝업 위젯
 
 protected:
 	UFUNCTION(BlueprintCallable)
@@ -49,4 +59,7 @@ protected:
 	//
 	//UFUNCTION(BlueprintCallable)
 	//virtual void EndFocus() override;
+public:
+	UFUNCTION(BlueprintCallable)
+	UWidgetComponent* GetPopupWidget() { return PopupWidget; }
 };
