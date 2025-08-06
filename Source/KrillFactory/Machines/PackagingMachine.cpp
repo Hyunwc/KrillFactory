@@ -3,7 +3,6 @@
 #include "Machines/PackagingMachine.h"
 #include "Machines/Conveyor.h"
 #include "Machines/MainPower.h"
-#include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
@@ -12,15 +11,11 @@ APackagingMachine::APackagingMachine()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
 	PackagingZone = CreateDefaultSubobject<UBoxComponent>(TEXT("Pack"));
 	PackagingZone->SetupAttachment(Root);
 	PackagingZone->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	PackagingZone->SetGenerateOverlapEvents(true);
 
-	bIsPowerOn = false;
 	FoundConveyor = nullptr;
 	MainPower = nullptr;
 }

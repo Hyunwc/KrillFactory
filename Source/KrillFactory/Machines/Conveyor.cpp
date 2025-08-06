@@ -25,7 +25,6 @@ AConveyor::AConveyor()
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Eighth, 100);
 	MaxBlockPoolSizes.Add(EBlockType::EBT_Pack, 100);
 
-	bIsPowerOn = false;
 	MainPower = nullptr;
 }
 

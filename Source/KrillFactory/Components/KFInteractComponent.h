@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "KFInteractComponent.generated.h"
 
+class AKFMachineBase;
+class AKFPlayerController;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class KRILLFACTORY_API UKFInteractComponent : public UActorComponent
@@ -22,10 +24,23 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	UPROPERTY(VisibleAnywhere)
+	bool bIsFocus;
+
+	UPROPERTY(VisibleAnywhere)
+	AKFMachineBase* Owner;
+
+	UPROPERTY(VisibleAnywhere)
+	AKFPlayerController* PC;
+
+
+public:
 	UFUNCTION(BlueprintCallable)
 	void BeginFocus();
 
 	UFUNCTION(BlueprintCallable)
 	void EndFocus();
 
+	UFUNCTION(BlueprintCallable)
+	void Click();
 };

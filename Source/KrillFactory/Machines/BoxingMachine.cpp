@@ -4,7 +4,6 @@
 #include "Machines/BoxingMachine.h"
 #include "Machines/Conveyor.h"
 #include "Machines/MainPower.h"
-#include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
@@ -13,19 +12,14 @@ ABoxingMachine::ABoxingMachine()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = Root;
-
 	BoxingZone = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxingZone"));
 	BoxingZone->SetupAttachment(Root);
-	//BoxingZone->SetBoxExtent(FVector(150.f, 150.f, 150.f));
 	BoxingZone->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BoxingZone->SetGenerateOverlapEvents(true);
 
 	PackCount = 0;
 	bBoxingComplete = false;
-	
-	bIsPowerOn = false;
+
 	FoundConveyor = nullptr;
 	MainPower = nullptr;
 }

@@ -28,9 +28,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UKFData* MachineData; 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Power")
 	bool bIsPowerOn; // 기계 전원
 	
@@ -50,6 +47,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UWidgetComponent* PopupWidget; // 팝업 위젯
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Data")
+	UKFData* MachineData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UWidgetComponent* ButtonWidget;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	void InitDataPopup();
@@ -62,4 +65,6 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	UWidgetComponent* GetPopupWidget() { return PopupWidget; }
+
+	UKFData* GetData() { return MachineData; }
 };
