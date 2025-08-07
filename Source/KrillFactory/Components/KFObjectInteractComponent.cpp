@@ -12,7 +12,6 @@
 
 UKFObjectInteractComponent::UKFObjectInteractComponent()
 {
-
 	PrimaryComponentTick.bCanEverTick = false;
 
 }
