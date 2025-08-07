@@ -31,8 +31,30 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UUserWidget> PopupWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> OrderWidgetClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> ProcessWidgetClass;
+
 	UPROPERTY(BlueprintReadWrite)
 	UKFPopupUserWidget* PopupHUD;
+
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* OrderWidget;
+
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* ProcessWidget;
+
+	// 게임 생산 관리 변수
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Production")
+	int32 TargetProductionCount; // 목표 생산 개수
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Production")
+	int32 CurrentCompletedCount; // 현재 완료된 생산 개수
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsProduction; // 생산 진행 중인지?
 
 private:
 	UPROPERTY()
@@ -64,4 +86,28 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Game State")
 	FText GetElapsedTimeText() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Production")
+	void SetTargetProductioncount(int32 NewTarget);
+
+	UFUNCTION(BlueprintCallable, Category = "Production")
+	void IncrementCompletedCount();
+
+	UFUNCTION(BlueprintPure, Category = "Production")
+	FText GetTargetCountText() const;
+
+	UFUNCTION(BlueprintPure, Category = "Production")
+	FText GetCompletedCountText() const;
+
+	UFUNCTION(BlueprintPure, Category = "Production")
+	FText GetProductionStatusText() const;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowOrderScreen();
+
+	UFUNCTION(BlueprintCallable)
+	void StartProduction(int32 TargetCount);
+
+	//UFUNCTION(BlueprintCallable)
+	//void EndProduction();
 };

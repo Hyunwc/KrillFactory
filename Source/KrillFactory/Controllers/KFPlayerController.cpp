@@ -18,19 +18,23 @@ AKFPlayerController::AKFPlayerController()
 	MainPowerActor = nullptr;
 	CurrentCamera = nullptr;
 
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+
+	TargetProductionCount = 0;
+	CurrentCompletedCount = 0;
+	bIsProduction = false;
 }
 
 void AKFPlayerController::BeginPlay()
 {
 	EnableInput(this);
-	bShowMouseCursor = true;
-
+	
 	SetInputMode(FInputModeGameAndUI());
-	bEnableClickEvents = true;
-	bEnableMouseOverEvents = true;
-
+	
 	// 위젯 클래스가 유효하고 아직 위젯이 생성되지 않았을 경우
-	if (MainHUDWidgetClass && !MainHUD)
+	if (MainHUDWidgetClass)
 	{
 		// 위젯 인스턴스 생성
 		MainHUD = CreateWidget(this, MainHUDWidgetClass);
@@ -39,8 +43,6 @@ void AKFPlayerController::BeginPlay()
 		{
 			// 화면에 위젯 추가
 			MainHUD->AddToViewport();
-			// 마우스 커서가 보이게
-			//bShowMouseCursor = true; 
 		}
 	}
 
@@ -51,6 +53,26 @@ void AKFPlayerController::BeginPlay()
 		{
 			PopupHUD->AddToViewport();
 			PopupHUD->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+
+	if (OrderWidgetClass)
+	{
+		OrderWidget = CreateWidget(this, OrderWidgetClass);
+		if (OrderWidget)
+		{
+			OrderWidget->AddToViewport();
+			OrderWidget->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+
+	if (ProcessWidgetClass)
+	{
+		ProcessWidget = CreateWidget(this, ProcessWidgetClass);
+		if (ProcessWidget)
+		{
+			ProcessWidget->AddToViewport();
+			ProcessWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 
@@ -119,4 +141,80 @@ FText AKFPlayerController::GetElapsedTimeText() const
 	
 	FString TimeString = FString::Printf(TEXT("경과 시간 : %02d : %02d"), Minutes, Seconds);
 	return FText::FromString(TimeString);
+}
+
+void AKFPlayerController::SetTargetProductioncount(int32 NewTarget)
+{
+	TargetProductionCount = FMath::Max(0, NewTarget);
+}
+
+void AKFPlayerController::IncrementCompletedCount()
+{
+	if (bIsProduction)
+	{
+		CurrentCompletedCount++;
+
+		if (TargetProductionCount > 0 && CurrentCompletedCount >= TargetProductionCount)
+		{
+			bIsProduction = false;
+		}
+	}
+}
+
+FText AKFPlayerController::GetTargetCountText() const
+{
+	return FText::AsNumber(TargetProductionCount);
+}
+
+FText AKFPlayerController::GetCompletedCountText() const
+{
+	return FText::AsNumber(CurrentCompletedCount);
+}
+
+FText AKFPlayerController::GetProductionStatusText() const
+{
+	if (!bIsProduction)
+	{
+		return FText::FromString(TEXT("준비 중..."));
+	}
+	else if (TargetProductionCount <= 0)
+	{
+		return FText::FromString(TEXT("목표 미설정"));
+	}
+	else if (CurrentCompletedCount >= TargetProductionCount)
+	{
+		return FText::FromString(TEXT("완료!"));
+	}
+	else
+	{
+		return FText::FromString(TEXT("진행 중..."));
+	}
+	
+}
+
+void AKFPlayerController::ShowOrderScreen()
+{
+	if (OrderWidget)
+	{
+		//OrderWidget->AddToViewport();
+		OrderWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	// TODO : 혹시나 기타 위젯이 거슬린다면 지우도록 합니다..
+}
+
+void AKFPlayerController::StartProduction(int32 TargetCount)
+{
+	if (TargetCount <= 0)
+	{
+		return;
+	}
+
+	SetTargetProductioncount(TargetCount);
+	CurrentCompletedCount = 0;
+	bIsProduction = true;
+
+	if (ProcessWidget)
+	{
+		ProcessWidget->SetVisibility(ESlateVisibility::Visible);
+	}
 }
