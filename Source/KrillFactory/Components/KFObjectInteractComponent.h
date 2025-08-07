@@ -30,7 +30,6 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AKFPlayerController* PC;
 
-
 public:
 	UFUNCTION(BlueprintCallable)
 	void BeginFocus();

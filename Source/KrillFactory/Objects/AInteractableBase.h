@@ -37,7 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UWidgetComponent* ButtonWidget;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact")
 	UKFObjectInteractComponent* InteractComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")

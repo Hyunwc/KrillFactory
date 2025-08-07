@@ -26,6 +26,7 @@ AKFMachineBase::AKFMachineBase()
 
 	// 액터 컴포넌트는 자동으로 부착됨 SetupAttachment 필요업음
 	InteractComponent = CreateDefaultSubobject<UKFInteractComponent>(TEXT("Interact"));
+
 	ButtonWidget = CreateDefaultSubobject< UWidgetComponent>(TEXT("Button"));
 	ButtonWidget->SetupAttachment(Root);
 	ButtonWidget->SetRelativeLocation(FVector::ZeroVector);
