@@ -12,7 +12,8 @@ AConveyor::AConveyor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Spline = CreateDefaultSubobject< USplineComponent>(TEXT("Spline"));
-	SetRootComponent(Spline);
+	//SetRootComponent(Spline);
+	Spline->SetupAttachment(Root);
 
 	MoveSpeed = 100.0f;
 	BlockSpawnInterval = 2.0f;  // 2초 간격으로 블록 투입
@@ -37,9 +38,25 @@ void AConveyor::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("Conveyor : 스플라인은 2개의 포인트를 필요로 합니다!!"));
 	}
 	// 스플라인 시작 지점의 위치와 회전 캐시
+	//FVector WorldSplineStart = Spline->GetComponentTransform().TransformPosition(
+	//	Spline->GetLocationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::Local)
+	//);
+	//SplineStartLocation = WorldSplineStart;
 	SplineStartLocation = Spline->GetLocationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 	//SplineStartRotation = Spline->GetRotationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 
+
+	DrawDebugSphere(
+		GetWorld(),
+		SplineStartLocation,
+		50.0f, // 스피어 반지름
+		12,    // 스피어 섹션 수
+		FColor::Red, // 색상
+		true,  // 지속적으로 그림
+		-1.0f, // 지속 시간 (음수면 한 프레임만, 양수면 해당 시간동안)
+		0,     // Depth priority
+		5.0f   // 두께
+	);
 	// 블록 풀 초기화
 	InitializeBlockPool();
 
