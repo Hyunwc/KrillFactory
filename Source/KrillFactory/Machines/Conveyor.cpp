@@ -17,7 +17,7 @@ AConveyor::AConveyor()
 
 	MoveSpeed = 100.0f;
 	BlockSpawnInterval = 2.0f;  // 2초 간격으로 블록 투입
-	NumBlocksToSpawn = 50;
+	NumBlocksToSpawn = 0;
 	BlocksSpawnedCount = 0;
 
 	// 타입별 기본 풀 크기 설정(에디터에서 오버라이드 가능)
@@ -273,5 +273,10 @@ void AConveyor::OnMainPowerStateChanged(bool bPowerOn)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Conveyor : Power Off")));
 		GetWorldTimerManager().ClearTimer(BlockSpawnTimerHandle);
 	}
+}
+
+void AConveyor::SetBlockSpawnCount(const int32& TargetCount)
+{
+	NumBlocksToSpawn = TargetCount * 2;
 }
 

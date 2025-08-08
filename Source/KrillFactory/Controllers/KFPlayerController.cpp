@@ -141,7 +141,7 @@ FText AKFPlayerController::GetElapsedTimeText() const
 	int32 Minutes = ElapsedTime / 60;
 	int32 Seconds = ElapsedTime % 60;
 	
-	FString TimeString = FString::Printf(TEXT("경과 시간 : %02d : %02d"), Minutes, Seconds);
+	FString TimeString = FString::Printf(TEXT("접속 시간 : %02d : %02d"), Minutes, Seconds);
 	return FText::FromString(TimeString);
 }
 
