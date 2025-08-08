@@ -62,6 +62,7 @@ void AKFPlayerController::BeginPlay()
 		if (OrderWidget)
 		{
 			OrderWidget->AddToViewport();
+
 			OrderWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
@@ -72,6 +73,7 @@ void AKFPlayerController::BeginPlay()
 		if (ProcessWidget)
 		{
 			ProcessWidget->AddToViewport();
+
 			ProcessWidget->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}

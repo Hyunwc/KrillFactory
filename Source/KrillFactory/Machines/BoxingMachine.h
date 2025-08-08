@@ -7,6 +7,7 @@
 #include "KFMachineBase.h"
 #include "BoxingMachine.generated.h"
 
+
 UCLASS()
 class KRILLFACTORY_API ABoxingMachine : public AKFMachineBase
 {
@@ -34,7 +35,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* BoxingZone;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	int32 PackCount; // 박스에 들어간 포장된 블럭의 개수
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
@@ -42,7 +43,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	bool bBoxingComplete; // 박싱이 완료됨을 알릴 불리언값
-	
+
+
 	// 카운트 증가되는게 확인되면 박스를 담을 배열도 필요할지 싶은데
 
 private:
@@ -56,4 +58,7 @@ public:
 	// 델리게이트에 등록할 함수
 	UFUNCTION()
 	void OnMainPowerStateChanged(bool bPowerOn);
+
+	
+
 };
