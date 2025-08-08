@@ -103,9 +103,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
 	void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
 
+
 public:
 
 	// 델리게이트에 등록할 함수
 	UFUNCTION()
 	void OnMainPowerStateChanged(bool bPowerOn);
+
+	UFUNCTION(BlueprintCallable)
+	void SetBlockSpawnCount(const int32& TargetCount);
 };
