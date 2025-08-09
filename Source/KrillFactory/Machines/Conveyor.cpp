@@ -280,3 +280,9 @@ void AConveyor::SetBlockSpawnCount(const int32& TargetCount)
 	NumBlocksToSpawn = TargetCount * 2;
 }
 
+void AConveyor::SetResetBlockSpawnCount()
+{
+	NumBlocksToSpawn = 0;
+	BlocksSpawnedCount = 0;
+}
+

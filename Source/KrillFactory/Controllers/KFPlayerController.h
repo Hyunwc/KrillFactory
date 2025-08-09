@@ -9,6 +9,7 @@
 class UUserWidget;
 class AMainPower;
 class UKFPopupUserWidget;
+class AKFFieldCamera;
 
 /**
  * 
@@ -56,6 +57,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsProduction; // 생산 진행 중인지?
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	TSubclassOf<AKFFieldCamera> CameraActorClass;
+
 private:
 	UPROPERTY()
 	UUserWidget* MainHUD;
@@ -64,7 +68,7 @@ private:
 	AMainPower* MainPowerActor; // 메인 파워 참조
 
 	UPROPERTY()
-	ACameraActor* CurrentCamera;
+	AKFFieldCamera* CurrentCamera;
 
 	UPROPERTY()
 	UUserWidget* PopupWidget;

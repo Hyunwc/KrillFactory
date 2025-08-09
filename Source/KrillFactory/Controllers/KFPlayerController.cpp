@@ -9,6 +9,7 @@
 #include "Camera/CameraActor.h"
 #include "Components/TextBlock.h"
 #include "UI/KFPopupUserWidget.h"
+#include "Machines/KFFieldCamera.h"
 
 AKFPlayerController::AKFPlayerController()
 {
@@ -85,14 +86,21 @@ void AKFPlayerController::BeginPlay()
 		MainPowerActor = Cast<AMainPower>(FoundActors[0]);
 	}
 
-	// 월드에서 "MainCamera" 태그를 가진 액터를 찾아 뷰 타겟으로 설정
-	TArray<AActor*> FoundCameraActors;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("MainCamera"), FoundCameraActors);
-	if (FoundCameraActors.Num() > 0)
+	TArray<AActor*> FoundCamera;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), CameraActorClass, FoundCamera);
+
+	if (FoundActors.Num() <= 0)
 	{
-		CurrentCamera = Cast<ACameraActor>(FoundCameraActors[0]);
-		if (CurrentCamera)
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("KFPC : 1개도 못찾았어요")));
+
+	}
+	// CurrentCamera는 AKFFieldCamera 타입임
+	for (AActor* Actor : FoundCamera)
+	{
+		AKFFieldCamera* Camera = Cast<AKFFieldCamera>(Actor);
+		if (Camera && Camera->CameraTag == TEXT("MainCamera"))
 		{
+			CurrentCamera = Camera;
 			SetViewTarget(CurrentCamera);
 		}
 	}
@@ -116,17 +124,27 @@ void AKFPlayerController::ToggleMainPower()
 
 void AKFPlayerController::SwitchCamera(FName CameraTag)
 {
-	TArray<AActor*> FoundCameraActors;
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), CameraTag, FoundCameraActors);
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), CameraActorClass, FoundActors);
 
-	if (FoundCameraActors.Num() > 0)
+	if (CameraActorClass == nullptr)
 	{
-		ACameraActor* TargetCamera = Cast<ACameraActor>(FoundCameraActors[0]);
-		if (TargetCamera)
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("KFPC : CameraActor Null")));
+
+	}
+
+	if (FoundActors.Num() <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("KFPC : 1개도 못찾았어요")));
+
+	}
+	for (AActor* Actor : FoundActors)
+	{
+		AKFFieldCamera* Camera = Cast<AKFFieldCamera>(Actor);
+		if (Camera && Camera->CameraTag == CameraTag)
 		{
-			// 부드럽게 시점 전환해주는 함수
-			SetViewTargetWithBlend(TargetCamera, 1.0f);
-			CurrentCamera = TargetCamera;
+			SetViewTargetWithBlend(Camera, 1.0f);
+			CurrentCamera = Camera;
 		}
 	}
 }
