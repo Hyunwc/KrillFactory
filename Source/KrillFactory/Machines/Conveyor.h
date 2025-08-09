@@ -112,4 +112,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetBlockSpawnCount(const int32& TargetCount);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentBlockSpawnCount() { BlocksSpawnedCount = 0; }
 };
