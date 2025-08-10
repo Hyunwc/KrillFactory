@@ -46,17 +46,17 @@ void AConveyor::BeginPlay()
 	//SplineStartRotation = Spline->GetRotationAtDistanceAlongSpline(0.0f, ESplineCoordinateSpace::World);
 
 
-	DrawDebugSphere(
-		GetWorld(),
-		SplineStartLocation,
-		50.0f, // 스피어 반지름
-		12,    // 스피어 섹션 수
-		FColor::Red, // 색상
-		true,  // 지속적으로 그림
-		-1.0f, // 지속 시간 (음수면 한 프레임만, 양수면 해당 시간동안)
-		0,     // Depth priority
-		5.0f   // 두께
-	);
+	//DrawDebugSphere(
+	//	GetWorld(),
+	//	SplineStartLocation,
+	//	50.0f, // 스피어 반지름
+	//	12,    // 스피어 섹션 수
+	//	FColor::Red, // 색상
+	//	true,  // 지속적으로 그림
+	//	-1.0f, // 지속 시간 (음수면 한 프레임만, 양수면 해당 시간동안)
+	//	0,     // Depth priority
+	//	5.0f   // 두께
+	//);
 	// 블록 풀 초기화
 	InitializeBlockPool();
 
@@ -179,14 +179,14 @@ void AConveyor::TrySpawnNextBlock()
 			ActiveBlocks.Add(NewInfo);
 			
 			BlocksSpawnedCount++;
-			UE_LOG(LogTemp, Log, TEXT("Conveyor : Spawned block %d / %d."), BlocksSpawnedCount, NumBlocksToSpawn);
+			//UE_LOG(LogTemp, Log, TEXT("Conveyor : Spawned block %d / %d."), BlocksSpawnedCount, NumBlocksToSpawn);
 		}
 	}
 	else
 	{
 		// 모든 블록을 투입했다면 타이머 중지
 		GetWorldTimerManager().ClearTimer(BlockSpawnTimerHandle);
-		UE_LOG(LogTemp, Log, TEXT("Conveyor : All %d blocks Spawned."), NumBlocksToSpawn);
+		//UE_LOG(LogTemp, Log, TEXT("Conveyor : All %d blocks Spawned."), NumBlocksToSpawn);
 	}
 }
 
@@ -259,7 +259,7 @@ void AConveyor::OnMainPowerStateChanged(bool bPowerOn)
 
 	if (bIsPowerOn)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan,	FString::Printf(TEXT("Conveyor : Power On")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan,	FString::Printf(TEXT("Conveyor : Power On")));
 		// 첫 블록 투입 타이머 시작(처음엔 바로 투입)
 		if (NumBlocksToSpawn > 0)
 		{
@@ -270,7 +270,7 @@ void AConveyor::OnMainPowerStateChanged(bool bPowerOn)
 	else
 	{
 		MoveSpeed = 0.0f;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Conveyor : Power Off")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, FString::Printf(TEXT("Conveyor : Power Off")));
 		GetWorldTimerManager().ClearTimer(BlockSpawnTimerHandle);
 	}
 }
