@@ -82,7 +82,7 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 	// 오버랩된 블록타입 확인
 	if (OverlappingBlock->BlockType == EBlockType::EBT_Full)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Cutt : Overlap!!")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Cutt : Overlap!!")));
 
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();

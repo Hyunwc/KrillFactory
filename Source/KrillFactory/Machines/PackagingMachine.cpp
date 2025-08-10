@@ -66,7 +66,7 @@ void APackagingMachine::OnPackagingZoneOverlapEnd(UPrimitiveComponent* Overlappe
 
 	if (OverlappingBlock == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("pack : null!!")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("pack : null!!")));
 		return;
 	}
 

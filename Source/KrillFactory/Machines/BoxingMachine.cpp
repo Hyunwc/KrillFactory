@@ -70,7 +70,7 @@ void ABoxingMachine::OnBoxingZoneOverlapEnd(UPrimitiveComponent* OverlappedCompo
 
 	if (OverlappingBlock == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("box : null!!")));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("box : null!!")));
 		return;
 	}
 
