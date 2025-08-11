@@ -264,7 +264,8 @@ void AConveyor::OnMainPowerStateChanged(bool bPowerOn)
 		if (NumBlocksToSpawn > 0)
 		{
 			MoveSpeed = 100.0f;
-			GetWorldTimerManager().SetTimer(BlockSpawnTimerHandle, this, &AConveyor::TrySpawnNextBlock, BlockSpawnInterval, true, 0.0f);
+			// 맨 마지막에 파라미터 1개 추가하면 첫 타이머시 간격 없이 바로 실행됨 주의!!
+			GetWorldTimerManager().SetTimer(BlockSpawnTimerHandle, this, &AConveyor::TrySpawnNextBlock, BlockSpawnInterval, true);
 		}
 	}
 	else
