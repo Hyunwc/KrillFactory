@@ -7,6 +7,7 @@
 #include "KFMachineBase.h"
 #include "BoxingMachine.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBoxComplete);
 
 UCLASS()
 class KRILLFACTORY_API ABoxingMachine : public AKFMachineBase
@@ -44,6 +45,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
 	bool bBoxingComplete; // 박싱이 완료됨을 알릴 불리언값
 
+	UPROPERTY(BlueprintReadOnly, Category = "RobotArm")
+	FOnBoxComplete OnBoxComplete;
 
 	// 카운트 증가되는게 확인되면 박스를 담을 배열도 필요할지 싶은데
 
