@@ -11,7 +11,7 @@ AConveyor::AConveyor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Spline = CreateDefaultSubobject< USplineComponent>(TEXT("Spline"));
+	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
 	//SetRootComponent(Spline);
 	Spline->SetupAttachment(Root);
 

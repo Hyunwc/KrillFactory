@@ -87,6 +87,10 @@ void ABoxingMachine::OnBoxingZoneOverlapEnd(UPrimitiveComponent* OverlappedCompo
 		// 현재 Pack BP가 2조각이 양옆으로 붙어있는 상태이기 때문
 		PackCount += 2;
 
+		if (PackCount % 16 == 0)
+		{
+			OnBoxComplete.Broadcast();
+		}
 		//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Yellow, FString::Printf(TEXT("box : %d 개 완료"), PackCount));
 
 	}
