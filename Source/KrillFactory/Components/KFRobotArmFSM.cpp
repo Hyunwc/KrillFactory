@@ -22,37 +22,6 @@ void UKFRobotArmFSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 }
 
-void UKFRobotArmFSM::IdleState()
-{
-
-}
-
-void UKFRobotArmFSM::CarryState()
-{
-	GetWorld()->GetTimerManager().SetTimer(StateTimerHandle, this, &UKFRobotArmFSM::FinishedCarry, 5.0f, false);
-}
-
-void UKFRobotArmFSM::ReturnState()
-{
-	GetWorld()->GetTimerManager().SetTimer(StateTimerHandle, this, &UKFRobotArmFSM::FinishedReturn, 5.0f, false);
-}
-
-void UKFRobotArmFSM::FinishedIdle()
-{
-}
-
-void UKFRobotArmFSM::FinishedCarry()
-{
-	GetWorld()->GetTimerManager().ClearTimer(StateTimerHandle);
-	ChangeState(ERobotArmState::RS_Return);
-}
-
-void UKFRobotArmFSM::FinishedReturn()
-{
-	GetWorld()->GetTimerManager().ClearTimer(StateTimerHandle);
-	ChangeState(ERobotArmState::RS_Idle);
-}
-
 void UKFRobotArmFSM::HandleBoxComplete()
 {
 	ChangeState(ERobotArmState::RS_Carry);
@@ -65,20 +34,5 @@ void UKFRobotArmFSM::ChangeState(ERobotArmState NewState)
 	// 실행창에 상태 메시지 출력
 	FString LogMsg = UEnum::GetValueAsString(CurrentState);
 	GEngine->AddOnScreenDebugMessage(0, 1, FColor::Cyan, LogMsg);
-
-	switch (CurrentState)
-	{
-	case ERobotArmState::RS_Idle:
-		IdleState();
-		break;
-	case ERobotArmState::RS_Carry:
-		CarryState();
-		break;
-	case ERobotArmState::RS_Return:
-		ReturnState();
-		break;
-	default:
-		break;
-	}
 }
 

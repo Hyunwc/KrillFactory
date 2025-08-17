@@ -34,22 +34,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FSM")
 	ERobotArmState CurrentState; // 로봇암의 상태	
 
-	FTimerHandle StateTimerHandle;
-
-	void IdleState(); // 대기 상태
-
-	void CarryState(); // 운반 상태
-
-	void ReturnState(); // 복귀 상태
-
-	void FinishedIdle();
-	void FinishedCarry();
-	void FinishedReturn();
-
 	UFUNCTION()
 	void HandleBoxComplete(); 
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeState(ERobotArmState NewState);
-		
 };
