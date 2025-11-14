@@ -10,6 +10,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/KFInteractComponent.h"
 #include "UI/KFPopupUserWidget.h"
+#include "Managers/KFPoolManager.h"
+#include "Kismet/GameplayStatics.h"
 
 AKFMachineBase::AKFMachineBase()
 {
@@ -56,6 +58,13 @@ AKFMachineBase::AKFMachineBase()
 void AKFMachineBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TArray<AActor*> FoundPoolManager;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKFPoolManager::StaticClass(), FoundPoolManager);
+	if (FoundPoolManager.Num() > 0)
+	{
+		PoolManager = Cast<AKFPoolManager>(FoundPoolManager[0]);
+	}
 
 	if (PopupWidget)
 	{

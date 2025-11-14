@@ -8,6 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "Products/KrillBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Managers/KFPoolManager.h"
 
 ACuttingMachine::ACuttingMachine()
 {
@@ -82,53 +83,47 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 	// 오버랩된 블록타입 확인
 	if (OverlappingBlock->BlockType == EBlockType::EBT_Full)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Cutt : Overlap!!")));
-
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
-		//FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
-
 		// 2. 기존 풀 블록을 컨베이어 풀로 반납
 		if (!FoundConveyor)
 		{
 			UE_LOG(LogTemp, Error, TEXT("CuttingMachine : Conveyor Not Found!"));
 			return;
 		}
-		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
 
-		AKrillBlock* NewQuaterBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Quarter);
+		PoolManager->ReturnPooling(OverlappingBlock, OverlappingBlock->BlockType);
+
+		AKrillBlock* NewQuaterBlock = PoolManager->GetPooling(EBlockType::EBT_Quarter);
 		if (NewQuaterBlock)
 		{
 			// 분할된 블럭들 위치 지정해서 스폰시킴
-			FoundConveyor->AddBlockToConveyor(NewQuaterBlock, OriginalLocation/*, OriginalRotation*/);
+			PoolManager->AddBlockToConveyor(NewQuaterBlock, OriginalLocation);
 		}
 	}
 	else if (OverlappingBlock->BlockType == EBlockType::EBT_Quarter)
 	{
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
-		//FRotator OriginalRotation = OverlappingBlock->GetActorRotation();
-
+		//CuttingZoneExitLocation = OriginalLocation;
 		// 2. 기존 풀 블록을 컨베이어 풀로 반납
 		if (!FoundConveyor)
 		{
 			UE_LOG(LogTemp, Error, TEXT("CuttingMachine : Conveyor Not Found!"));
 			return;
 		}
-		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
+
+		PoolManager->ReturnPooling(OverlappingBlock, OverlappingBlock->BlockType);
 		
 		GetWorldTimerManager().ClearTimer(EighthTimer);
 		PendingSpawnEighthBlocks.Empty();
 
 		for (int32 i = 0; i < 4; i++)
 		{
-			AKrillBlock* NewEighthBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Eighth);
+			AKrillBlock* NewEighthBlock = PoolManager->GetPooling(EBlockType::EBT_Eighth);
 			if (NewEighthBlock)
 			{
 				PendingSpawnEighthBlocks.Add(NewEighthBlock);
-				//GetWorldTimerManager().SetTimer(EighthTimer, this, )
-				//// 분할된 블럭들 위치 지정해서 스폰시킴
-				//FoundConveyor->AddBlockToConveyor(NewEighthBlock, OriginalLocation/*, OriginalRotation*/);
 			}
 		}
 		
@@ -177,7 +172,7 @@ void ACuttingMachine::SpawnNextEighthBlock()
 	AKrillBlock* EighthToSpawn = PendingSpawnEighthBlocks[0];
 	PendingSpawnEighthBlocks.RemoveAt(0);
 
-	FoundConveyor->AddBlockToConveyor(EighthToSpawn, CuttingZoneExitLocation/*, OriginalRotation*/);
+	PoolManager->AddBlockToConveyor(EighthToSpawn, CuttingZoneExitLocation);
 }
 
 

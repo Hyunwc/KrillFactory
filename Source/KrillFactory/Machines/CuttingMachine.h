@@ -49,8 +49,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AKrillBlock*> PendingSpawnEighthBlocks;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cutting")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Cutting")
 	FVector CuttingZoneExitLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cutting")
+	USceneComponent* CuttingScene;
 
 public:
 	UPROPERTY()

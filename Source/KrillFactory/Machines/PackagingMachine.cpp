@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Products/KrillBlock.h"
+#include "Managers/KFPoolManager.h"
 
 APackagingMachine::APackagingMachine()
 {
@@ -66,14 +67,11 @@ void APackagingMachine::OnPackagingZoneOverlapEnd(UPrimitiveComponent* Overlappe
 
 	if (OverlappingBlock == nullptr)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("pack : null!!")));
 		return;
 	}
 
 	if (OverlappingBlock->BlockType == EBlockType::EBT_Eighth)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("pack : Overlap!!")));
-
 		// 1. 기존 풀 블록의 위치와 회전 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
 
@@ -84,13 +82,13 @@ void APackagingMachine::OnPackagingZoneOverlapEnd(UPrimitiveComponent* Overlappe
 		}
 
 		//OverlappingBlock->SetActorHiddenInGame(true);
-		FoundConveyor->ReturnBlockToPool(OverlappingBlock);
+		PoolManager->ReturnPooling(OverlappingBlock, OverlappingBlock->BlockType);
 
-		AKrillBlock* NewPackBlock = FoundConveyor->GetBlockFromPool(EBlockType::EBT_Pack);
+		AKrillBlock* NewPackBlock = PoolManager->GetPooling(EBlockType::EBT_Pack);
 		if (NewPackBlock)
 		{
 			// 분할된 블럭들 위치 지정해서 스폰시킴
-			FoundConveyor->AddBlockToConveyor(NewPackBlock, OriginalLocation);
+			PoolManager->AddBlockToConveyor(NewPackBlock, OriginalLocation);
 		}
 	}
 }
