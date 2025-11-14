@@ -43,6 +43,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interact")
 	UBoxComponent* MouseInteractComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	class AKFPoolManager* PoolManager;
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UWidgetComponent* PopupWidget; // 팝업 위젯

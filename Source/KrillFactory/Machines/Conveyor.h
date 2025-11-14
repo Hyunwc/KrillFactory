@@ -6,10 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Containers/Queue.h"
 #include "KFMachineBase.h"
-//#include "Products/KrillBlock.h"
+#include "Products/KrillBlock.h"
 #include "Conveyor.generated.h"
 
-class AKrillBlock;
+//class AKrillBlock;
 
 USTRUCT(BlueprintType)
 struct FBlockPool
@@ -76,7 +76,7 @@ public:
 	UPROPERTY()
 	class AMainPower* MainPower; // 델리게이트 사용을 위한 참조
 
-private:
+public:
 
 	UPROPERTY()
 	TMap<EBlockType, FBlockPool> BlockPool; // 실제 블록풀
@@ -85,23 +85,25 @@ private:
 	FTimerHandle BlockSpawnTimerHandle; // 블록 투입 타이머 핸들
 	
 	// 스플라인 시작 지점의 월드 위치 및 회전
+	UPROPERTY()
 	FVector SplineStartLocation;
-	//FRotator SplineStartRotation;
 
 public:
-	void InitializeBlockPool(); // 풀 초기화
+	//void InitializeBlockPool(); // 풀 초기화
 
 	void TrySpawnNextBlock(); // 타이머에 의해 호출될 함수 (다음 블록 투입 시도)
 
-	UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	AKrillBlock* GetBlockFromPool(EBlockType Type); // 풀에서 블록을 가져오는 함수
+	void AddBlock(AKrillBlock* NewBlock, const FVector& NewLocation);
 
-	UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	void ReturnBlockToPool(AKrillBlock* BlockToReturn); // 블록을 풀로 반환하는 함수
-
-	// 특정 위치에 블록을 스플라인에 추가하는 함수(절삭기용)
-	UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
-	void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
+	//UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
+	//AKrillBlock* GetBlockFromPool(EBlockType Type); // 풀에서 블록을 가져오는 함수
+	//
+	//UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
+	//void ReturnBlockToPool(AKrillBlock* BlockToReturn); // 블록을 풀로 반환하는 함수
+	//
+	//// 특정 위치에 블록을 스플라인에 추가하는 함수(절삭기용)
+	//UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
+	//void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
 
 
 public:
@@ -115,4 +117,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetResetBlockSpawnCount();
+
+public:
+	
 };
