@@ -83,21 +83,15 @@ void ACuttingMachine::OnCuttingZoneOverlapEnd(UPrimitiveComponent* OverlappedCom
 	// 오버랩된 블록타입 확인
 	if (OverlappingBlock->BlockType == EBlockType::EBT_Full)
 	{
-		// 1. 기존 풀 블록의 위치와 회전 저장
+		// 기존 풀 블록의 위치 저장
 		FVector OriginalLocation = OverlappingBlock->GetActorLocation();
-		// 2. 기존 풀 블록을 컨베이어 풀로 반납
-		if (!FoundConveyor)
-		{
-			UE_LOG(LogTemp, Error, TEXT("CuttingMachine : Conveyor Not Found!"));
-			return;
-		}
-
+		// 기존 풀 블록을 반납
 		PoolManager->ReturnPooling(OverlappingBlock, OverlappingBlock->BlockType);
-
+		// 4등분된 블럭을 풀에서 꺼내온다
 		AKrillBlock* NewQuaterBlock = PoolManager->GetPooling(EBlockType::EBT_Quarter);
 		if (NewQuaterBlock)
 		{
-			// 분할된 블럭들 위치 지정해서 스폰시킴
+			// 기존 위치에 블럭 스폰
 			PoolManager->AddBlockToConveyor(NewQuaterBlock, OriginalLocation);
 		}
 	}

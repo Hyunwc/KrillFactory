@@ -67,12 +67,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Conveyor")
 	TArray<FActiveBlockInfo> ActiveBlocks; // 현재 활성화되어 컨베이어 위에 있는 블록들
 
-	UPROPERTY(EditAnywhere, Category = "BlockPool")
-	TMap<EBlockType, TSubclassOf<AKrillBlock>> BlockBlueprints; // 블록 풀링을 위한 맵
-	
-	UPROPERTY(EditAnywhere, Category = "BlockPool")
-	TMap<EBlockType, int32> MaxBlockPoolSizes; // 타입별 최대 풀 크기
-
 	UPROPERTY()
 	class AMainPower* MainPower; // 델리게이트 사용을 위한 참조
 
@@ -89,22 +83,9 @@ public:
 	FVector SplineStartLocation;
 
 public:
-	//void InitializeBlockPool(); // 풀 초기화
-
 	void TrySpawnNextBlock(); // 타이머에 의해 호출될 함수 (다음 블록 투입 시도)
 
 	void AddBlock(AKrillBlock* NewBlock, const FVector& NewLocation);
-
-	//UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	//AKrillBlock* GetBlockFromPool(EBlockType Type); // 풀에서 블록을 가져오는 함수
-	//
-	//UFUNCTION(BlueprintCallable, Category = "Conveyor Pool")
-	//void ReturnBlockToPool(AKrillBlock* BlockToReturn); // 블록을 풀로 반환하는 함수
-	//
-	//// 특정 위치에 블록을 스플라인에 추가하는 함수(절삭기용)
-	//UFUNCTION(BlueprintCallable, Category = "Conveyor Management")
-	//void AddBlockToConveyor(AKrillBlock* Block, const FVector& WorldLocation/*, const FRotator& WorldRotation*/);
-
 
 public:
 
@@ -117,7 +98,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetResetBlockSpawnCount();
-
-public:
-	
 };

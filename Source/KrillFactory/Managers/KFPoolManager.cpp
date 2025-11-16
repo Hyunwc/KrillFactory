@@ -79,7 +79,6 @@ AKrillBlock* AKFPoolManager::GetPooling(EBlockType Type)
 			Block->SetActorHiddenInGame(false);
 			Block->SetActorEnableCollision(true);
 			Block->SetActorTickEnabled(true);
-			Block->SetBlockType(Type);
 			Wrapper->PoolMapArray.Pop();
 			return Block;
 		}
@@ -99,7 +98,6 @@ void AKFPoolManager::ReturnPooling(AKrillBlock* Block, EBlockType Type)
 		Block->SetActorHiddenInGame(true);
 		Block->SetActorEnableCollision(false);
 		Block->SetActorTickEnabled(false);
-		Block->SetBlockType(Type); // 풀에 들어갈 때 해당 타입으로 설정
 		Wrapper->PoolMapArray.Add(Block);
 	}
 }
